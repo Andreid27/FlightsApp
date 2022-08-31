@@ -1,0 +1,130 @@
+package org.company;
+
+import org.company.Models.Airplane;
+import org.company.Models.Flight;
+import org.company.Models.Reservation;
+import org.company.Models.User;
+
+import java.sql.*;
+import java.util.ArrayList;
+
+public class DATABASE {
+    public static Connection startDBconnection() throws SQLException {
+        //DB parameters
+        final String jdbUrl = "jdbc:mysql://localhost:33061/FlightsApp";
+        final String USER = "root";
+        final String PASSWORD = "";
+        Connection connection = DriverManager.getConnection(jdbUrl, USER, PASSWORD);
+        return connection;
+    }
+    public static ArrayList<User> getAllUsers() throws SQLException {
+        ArrayList<User> users = new ArrayList<>();
+        String getAllUsers = "SELECT * FROM users";
+        Connection connection = startDBconnection();
+        Statement statement = connection.createStatement();
+        try(ResultSet resultSet = statement.executeQuery(getAllUsers)){
+            while (resultSet.next()){
+                int id = resultSet.getInt("id");
+                String userName = resultSet.getString("nume");
+                String email = resultSet.getString("mail");
+                String password = resultSet.getString("password");
+                users.add(new User(userName,email,password,id));
+            }
+        }
+        return users;
+    }
+
+    public static boolean addUser(User newUser) {
+        boolean registrationComplete = false;
+        try (Connection connection = startDBconnection();
+                Statement statement = connection.createStatement()) {
+                String userName = new String();
+                userName = userName.concat("\""+newUser.getUserName()+"\"");
+                String mail = new String();
+                mail=mail.concat("\""+newUser.getEmail()+"\"");
+                String password =new String();
+                password=password.concat("\""+ newUser.getPassword()+"\"");
+                String insertUsers = "INSERT INTO Users VALUES (null,"+userName+","+mail+","+password+");";
+                statement.execute(insertUsers);
+                registrationComplete = true;
+            } catch (SQLException e) {
+                registrationComplete = false;
+        }
+        return registrationComplete;
+    }
+
+    public static User getUserByEmailAndPassword(User addedUser) {
+        User DBUser = null;
+        try (Connection connection = startDBconnection();
+             Statement statement = connection.createStatement()) {
+            String userName = new String();
+            userName = userName.concat("\""+addedUser.getUserName()+"\"");
+            String mail = new String();
+            mail=mail.concat("\""+addedUser.getEmail()+"\"");
+            String password =new String();
+            password=password.concat("\""+ addedUser.getPassword()+"\"");
+            String getUserByEmailAndPassword = "SELECT * FROM users WHERE users.nume="+userName+" AND users.mail="+mail+" AND users.password="+password+";";
+            try(ResultSet resultSet = statement.executeQuery(getUserByEmailAndPassword)){
+                while (resultSet.next()){
+                    int DBid = resultSet.getInt("id");
+                    String DBuserName = resultSet.getString("nume");
+                    String DBemail = resultSet.getString("mail");
+                    String DBpassword = resultSet.getString("password");
+                    DBUser = new User(DBuserName,DBemail,DBpassword,DBid);
+                }
+            }
+        } catch (SQLException e) {
+        }
+        return DBUser;
+    }
+
+
+
+    public static boolean verifyUser(User userToVerify) {
+        User DBUser = null;
+        try (Connection connection = startDBconnection();
+             Statement statement = connection.createStatement()) {
+            int userId = userToVerify.getUserId();
+            String getbyId = "SELECT * FROM users WHERE users.id="+userId+";";
+            try(ResultSet resultSet = statement.executeQuery(getbyId)){
+                while (resultSet.next()){
+                    int DBid = resultSet.getInt("id");
+                    String DBuserName = resultSet.getString("nume");
+                    String DBemail = resultSet.getString("mail");
+                    String DBpassword = resultSet.getString("password");
+                    DBUser = new User(DBuserName,DBemail,DBpassword,DBid);
+                }
+            }
+        } catch (SQLException e) {
+        }
+        return userToVerify.verifyUser(DBUser);
+    }
+
+    public static ArrayList<Reservation> getUserRezervations(User user) throws SQLException {
+        ArrayList<Reservation> reservations = new ArrayList<>();
+        int userId = user.getUserId();
+        String getUserReservations = "SELECT rezervare.id as rezerare_id,rezervare.lucuri,zbor.id as zbor_id,zbor.FlightNumber,zbor.aeronava as aeronava_id,aeronava.Producator,aeronava.Model,aeronava.nr_max_locuri,zbor.Companie,zbor.departure_timestamp,zbor.landing_timestamp, zbor.departure_location,zbor.landing_location FROM rezervari rezervare JOIN users u ON u.id=rezervare.id_user JOIN zboruri zbor ON zbor.id=rezervare.id_zbor JOIN aeronave aeronava ON aeronava.id=zbor.aeronava WHERE u.id="+userId+";";
+        Connection connection = startDBconnection();
+        Statement statement = connection.createStatement();
+        try(ResultSet resultSet = statement.executeQuery(getUserReservations)){
+            while (resultSet.next()){
+                int rezerare_id = resultSet.getInt("rezerare_id");
+                String lucuri = resultSet.getString("lucuri");
+                int zbor_id = resultSet.getInt("zbor_id");
+                String FlightNumber = resultSet.getString("FlightNumber");
+                int aeronava_id = resultSet.getInt("aeronava_id");
+                String Producator = resultSet.getString("Producator");
+                String Model = resultSet.getString("Model");
+                int nr_max_locuri = resultSet.getInt("nr_max_locuri");
+                String Companie = resultSet.getString("Companie");
+                String departure_timestamp = resultSet.getString("departure_timestamp");
+                String landing_timestamp = resultSet.getString("landing_timestamp");
+                String departure_location = resultSet.getString("departure_location");
+                String landing_location = resultSet.getString("landing_location");
+                reservations.add(new Reservation(rezerare_id,user,lucuri,new Flight(zbor_id,FlightNumber,Companie,new Airplane(aeronava_id,Producator,Model,nr_max_locuri),departure_timestamp,landing_timestamp,departure_location,landing_location)));
+            }
+        }
+        return reservations;
+    }
+
+}
