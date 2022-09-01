@@ -55,7 +55,7 @@ const Analytics = () => {
               <SubTitle>Last 30 days</SubTitle>
 
               <DoughnutChart
-                height="300px"
+                height="150px"
                 color={[palette.primary.dark, palette.primary.main, palette.primary.light]}
               />
             </Card>
