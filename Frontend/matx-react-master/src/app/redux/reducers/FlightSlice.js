@@ -9,7 +9,7 @@ export const getUserFlights = createAsyncThunk('flightApp/rezervations/getUserFl
 	const response = await axios.post(apiSpec.REZERVATIONS, { userName: user.userName, email: user.email, password: user.password, userId: user.userId });
 	const data = await response.data;
 
-	console.log(response.data);
+	// console.log(response.data);
 
 
 	return data;
@@ -41,41 +41,15 @@ const FlightSlice = createSlice({
 	name: 'flightApp/flights',
 	initialState: reservationsAdapter.getInitialState({}),
 	reducers: {
-		setFeedbacksSearchText: {
+		setSelectedReservation: {
 			reducer: (state, action) => {
-				state.searchText = action.payload;
+				state.SelectedReservation = action.payload;
+				console.log(action.payload)
 			},
-			prepare: event => ({ payload: event.target.value || '' })
+			// prepare: event => ({ payload: event.target.value || '' })
 		},
-		setFeedbacksFilterStars: {
-			reducer: (state, action) => {
-				state.filterStars = action.payload;
-			},
-			prepare: event => ({ payload: event.target.value || '' })
-		},
-		setFeedbacksFilterDate: {
-			reducer: (state, action) => {
-				state.filterDate = action.payload;
-			},
-			prepare: event => ({ payload: event || '' })
-		},
-		resetFeedbacksSearchText: (state, action) => {
-			state.searchText = '';
-		},
-		resetFeedbacksFilterStars: (state, action) => {
-			state.filterStars = '';
-		},
-		resetFeedbacksFilterDate: (state, action) => {
-			state.filterDate = '';
-		},
-		toggleVariateDescSize: (state, action) => {
-			state.variateDescSize = !state.variateDescSize;
-		},
-		openFeedbackDialog: (state, action) => {
-			state.feedbackDialogId = action.payload;
-		},
-		closeFeedbackDialog: (state, action) => {
-			state.feedbackDialogId = action.null;
+		resetSelectedReservation: (state, action) => {
+			state.searchText = '';//action.null
 		}
 	},
 	extraReducers: {
@@ -87,15 +61,8 @@ const FlightSlice = createSlice({
 });
 
 export const {
-	setFeedbacksSearchText,
-	resetFeedbacksSearchText,
-	setFeedbacksFilterStars,
-	resetFeedbacksFilterStars,
-	setFeedbacksFilterDate,
-	resetFeedbacksFilterDate,
-	toggleVariateDescSize,
-	openFeedbackDialog,
-	closeFeedbackDialog
+	setSelectedReservation,
+	resetSelectedReservation
 } = FlightSlice.actions;
 
 export default FlightSlice.reducer;

@@ -16,8 +16,9 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
+import DoneIcon from '@mui/icons-material/Done';
 import { Paragraph } from 'app/components/Typography';
-import { getUserFlights, selectReservations } from 'app/redux/reducers/FlightSlice';
+import { getUserFlights, selectReservations, setSelectedReservation } from 'app/redux/reducers/FlightSlice';
 import {React, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -26,6 +27,7 @@ import { useState } from 'react';
 import { isBefore } from 'date-fns';
 import _ from 'lodash';
 import Tooltip from '@mui/material/Tooltip';
+import SelectButton from './SelectButton';
 
 const CardHeader = styled(Box)(() => ({
   display: 'flex',
@@ -122,7 +124,7 @@ function YourReservations (props) {
     dispatch(getUserFlights(user))
   },[])
   const reservations = useSelector(selectReservations);
-  console.log(reservations);
+  // console.log(reservations);
 
   function hasDepartured(departure){
       let departureTime = new Date(departure);
@@ -162,6 +164,17 @@ function YourReservations (props) {
   useEffect(()=>{
     console.log(order);
   },[order])
+
+  // const [SelectedReservation, setSelectedReservation] = useState();
+
+  function ChangeSelected(event,reservation){
+        if (event.nativeEvent.defaultPrevented) {
+          dispatch(setSelectedReservation("reservation"));
+          }
+          dispatch(setSelectedReservation(reservation));
+      
+  }
+
 
 
   return (
@@ -208,7 +221,7 @@ function YourReservations (props) {
 							reservations,
 							[
 								reservation => {
-									console.log(reservation);
+									// console.log(reservation);
 									// console.log(order);
 											return reservation.flight[order.id];
 									}
@@ -250,9 +263,13 @@ function YourReservations (props) {
                 </TableCell>
 
                 <TableCell sx={{ px: 0 }} colSpan={1}>
-                  <IconButton>
-                    <Icon color="primary">edit</Icon>
+                  {/* <div  onClick={ChangeSelected(reservation)}> */}
+                  <IconButton onClick={event => ChangeSelected(event,reservation)}>
+                    <SelectButton
+                    id = {reservation.id}
+                    />
                   </IconButton>
+                  {/* </div> */}
                 </TableCell>
               </TableRow>
             ))}
