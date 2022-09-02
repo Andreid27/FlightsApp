@@ -26,6 +26,6 @@ public class ReservationsService {
             String rezervationsJSONString = reservations.toString();
             POST.postResponse(exchange,rezervationsJSONString,200);
         }
-        else {POST.postResponse(exchange,"Forbidden. ",406);}
+        else {POST.postResponse(exchange,"Unauthorized",401);}
     }
 }
