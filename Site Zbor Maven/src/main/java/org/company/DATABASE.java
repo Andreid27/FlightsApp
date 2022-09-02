@@ -1,9 +1,6 @@
 package org.company;
 
-import org.company.Models.Airplane;
-import org.company.Models.Flight;
-import org.company.Models.Reservation;
-import org.company.Models.User;
+import org.company.Models.*;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -28,7 +25,8 @@ public class DATABASE {
                 String userName = resultSet.getString("nume");
                 String email = resultSet.getString("mail");
                 String password = resultSet.getString("password");
-                users.add(new User(userName,email,password,id));
+                String userRole = resultSet.getString("userRole");
+                users.add(new User(userName,email,password,id, userRole));
             }
         }
         return users;
@@ -44,7 +42,11 @@ public class DATABASE {
                 mail=mail.concat("\""+newUser.getEmail()+"\"");
                 String password =new String();
                 password=password.concat("\""+ newUser.getPassword()+"\"");
-                String insertUsers = "INSERT INTO Users VALUES (null,"+userName+","+mail+","+password+");";
+                String userRole =new String();
+                if(newUser.getUserRole() != null && UserRole.UserRoleIsValid(newUser.getUserRole()) ) { //security issues
+                    userRole=userRole.concat("\""+newUser.getUserRole()+"\"");
+                } else{userRole=userRole.concat("\""+"user"+"\"");}
+                String insertUsers = "INSERT INTO Users VALUES (null,"+userName+","+mail+","+password+","+userRole+");";
                 statement.execute(insertUsers);
                 registrationComplete = true;
             } catch (SQLException e) {
@@ -70,7 +72,8 @@ public class DATABASE {
                     String DBuserName = resultSet.getString("nume");
                     String DBemail = resultSet.getString("mail");
                     String DBpassword = resultSet.getString("password");
-                    DBUser = new User(DBuserName,DBemail,DBpassword,DBid);
+                    String userRole = resultSet.getString("userRole");
+                    DBUser = new User(DBuserName,DBemail,DBpassword,DBid, userRole);
                 }
             }
         } catch (SQLException e) {
@@ -92,7 +95,8 @@ public class DATABASE {
                     String DBuserName = resultSet.getString("nume");
                     String DBemail = resultSet.getString("mail");
                     String DBpassword = resultSet.getString("password");
-                    DBUser = new User(DBuserName,DBemail,DBpassword,DBid);
+                    String userRole = resultSet.getString("userRole");
+                    DBUser = new User(DBuserName,DBemail,DBpassword,DBid, userRole);
                 }
             }
         } catch (SQLException e) {

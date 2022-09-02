@@ -18,8 +18,12 @@ import {
 } from '@mui/material';
 import DoneIcon from '@mui/icons-material/Done';
 import { Paragraph } from 'app/components/Typography';
-import { getUserFlights, selectReservations, setSelectedReservation } from 'app/redux/reducers/FlightSlice';
-import {React, useEffect } from 'react';
+import {
+  getUserFlights,
+  selectReservations,
+  setSelectedReservation,
+} from 'app/redux/reducers/FlightSlice';
+import { React, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
@@ -73,128 +77,132 @@ const Small = styled('small')(({ bgcolor }) => ({
   boxShadow: '0 0 2px 0 rgba(0, 0, 0, 0.12), 0 2px 2px 0 rgba(0, 0, 0, 0.24)',
 }));
 
+const rows = [
+  {
+    id: 'departureTimestamp asc',
+    categorie: 'departureTimestamp',
+    label: 'Departure Ascending',
+    sort: true,
+    direction: 'asc',
+  },
+  {
+    id: 'departureTimestamp desc',
+    categorie: 'departureTimestamp',
+    label: 'Departure Descending',
+    sort: true,
+    direction: 'desc',
+  },
 
-const rows = [	{
-		id: 'departureTimestamp asc',
-		categorie: 'departureTimestamp',
-		label: 'Departure Ascending',
-		sort: true,
-		direction: 'asc'
-	},
-	{
-		id: 'departureTimestamp desc',
-		categorie: 'departureTimestamp',
-		label: 'Departure Descending',
-		sort: true,
-		direction: 'desc'
-	},
-
-	{
-		id: 'Destination asc',
-		categorie: 'landingLocation',
-		label: 'Destination A-Z',
-		sort: true,
-		direction: 'asc'
-	},
-	{
-		id: 'Destination desc',
-		categorie: 'landingLocation',
-		label: 'Destination Z-A',
-		sort: true,
-		direction: 'desc'
-	}
+  {
+    id: 'Destination asc',
+    categorie: 'landingLocation',
+    label: 'Destination A-Z',
+    sort: true,
+    direction: 'asc',
+  },
+  {
+    id: 'Destination desc',
+    categorie: 'landingLocation',
+    label: 'Destination Z-A',
+    sort: true,
+    direction: 'desc',
+  },
 ];
 
-
-
-function YourReservations (props) {
+function YourReservations(props) {
   const { palette } = useTheme();
   const bgError = palette.success.main;
   const bgPrimary = palette.primary.main;
   const bgSecondary = palette.secondary.main;
   const dispatch = useDispatch();
-  const user ={
-    email : window.localStorage.getItem('email'),
-    password : window.localStorage.getItem('password'),
-    userName : window.localStorage.getItem('userName'),
-    userId : window.localStorage.getItem('userId')
+  const user = {
+    email: window.localStorage.getItem('email'),
+    password: window.localStorage.getItem('password'),
+    userName: window.localStorage.getItem('userName'),
+    userId: window.localStorage.getItem('userId'),
   };
 
-  useEffect(()=>{
-    dispatch(getUserFlights(user))
-  },[])
+  useEffect(() => {
+    dispatch(getUserFlights(user));
+  }, []);
   const reservations = useSelector(selectReservations);
-  // console.log(reservations);
+  var dateOptions = {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+  };
 
-  function hasDepartured(departure){
-      let departureTime = new Date(departure);
-      let now = new Date;
-     return isBefore(departureTime,now);
+  function hasDepartured(departure) {
+    let departureTime = new Date(departure);
+    let now = new Date();
+    return isBefore(departureTime, now);
   }
-  function isFling(flight){
-      let departureTime =new Date(flight.departureTimestamp);
-      let landingTime = new Date(flight.landingTimestamp);
-      let now = new Date;
-     return (isBefore(departureTime,now)&&isBefore(now,landingTime));
+  function isFling(flight) {
+    let departureTime = new Date(flight.departureTimestamp);
+    let landingTime = new Date(flight.landingTimestamp);
+    let now = new Date();
+    return isBefore(departureTime, now) && isBefore(now, landingTime);
   }
 
-	const [order, setOrder] = useState({
-		direction: 'asc',
-		id: null
-	});
+  const [order, setOrder] = useState({
+    direction: 'asc',
+    id: null,
+  });
 
   const [sortCategory, setSortCategory] = useState('departureTimestamp desc');
-	const createSortHandler = property => event => {
-		setSortCategory(event.target.value);
-		let categorie = 'departureTimestamp';
-		let direction = 'desc'
-		for (let i = 0; i < rows.length; i++) {
-			if (rows[i].id === event.target.value) {
-				categorie = rows[i].categorie;
-				direction = rows[i].direction;
-			}
-		}
-		property = event.target.value;
-		const id = categorie;
-		setOrder({
-			direction,
-			id
-		});
-	}
-  useEffect(()=>{
+  const createSortHandler = (property) => (event) => {
+    setSortCategory(event.target.value);
+    let categorie = 'departureTimestamp';
+    let direction = 'desc';
+    for (let i = 0; i < rows.length; i++) {
+      if (rows[i].id === event.target.value) {
+        categorie = rows[i].categorie;
+        direction = rows[i].direction;
+      }
+    }
+    property = event.target.value;
+    const id = categorie;
+    setOrder({
+      direction,
+      id,
+    });
+  };
+  useEffect(() => {
     console.log(order);
-  },[order])
+  }, [order]);
 
   // const [SelectedReservation, setSelectedReservation] = useState();
 
-  function ChangeSelected(event,reservation){
-        if (event.nativeEvent.defaultPrevented) {
-          dispatch(setSelectedReservation("reservation"));
-          }
-          dispatch(setSelectedReservation(reservation));
-      
+  function ChangeSelected(event, reservation) {
+    if (event.nativeEvent.defaultPrevented) {
+      dispatch(setSelectedReservation('reservation'));
+    }
+    dispatch(setSelectedReservation(reservation));
   }
-
-
 
   return (
     <Card elevation={3} sx={{ pt: '20px', mb: 3 }}>
       <CardHeader>
-        <Title>Your reservations</Title><div>
-        <SubTitle>Sort by:  </SubTitle>
-        <Select size="small" 								
-                defaultValue={30}
-								labelId="demo-simple-select-label"
-								id="demo-simple-select"
-								value={sortCategory}
-								onChange={createSortHandler()}
-							>
-								{rows.map((row) => (
-									<MenuItem key={row.id + ' ' + row.direction} value={row.id}>
-										{row.label}
-									</MenuItem>
-								))}
-        </Select></div>
+        <Title>Your reservations</Title>
+        <div>
+          <SubTitle>Sort by: </SubTitle>
+          <Select
+            size="small"
+            defaultValue={30}
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={sortCategory}
+            onChange={createSortHandler()}
+          >
+            {rows.map((row) => (
+              <MenuItem key={row.id + ' ' + row.direction} value={row.id}>
+                {row.label}
+              </MenuItem>
+            ))}
+          </Select>
+        </div>
       </CardHeader>
 
       <Box overflow="auto">
@@ -218,41 +226,50 @@ function YourReservations (props) {
 
           <TableBody>
             {_.orderBy(
-							reservations,
-							[
-								reservation => {
-									// console.log(reservation);
-									// console.log(order);
-											return reservation.flight[order.id];
-									}
-								
-							],
-							[order.direction])
-            .map((reservation, index) => (
+              reservations,
+              [
+                (reservation) => {
+                  // console.log(reservation);
+                  // console.log(order);
+                  return reservation.flight[order.id];
+                },
+              ],
+              [order.direction]
+            ).map((reservation, index) => (
               <TableRow key={index} hover>
                 <TableCell colSpan={5} align="left" sx={{ px: 0, textTransform: 'capitalize' }}>
                   <Box display="flex" alignItems="center">
                     {/* <Avatar src={product.imgUrl} /> */}
-                    <Paragraph sx={{ m: 0, ml: 4 }}>{reservation.flight.departureLocation+" - "+reservation.flight.landingLocation }</Paragraph>
+                    <Paragraph sx={{ m: 0, ml: 4 }}>
+                      {reservation.flight.departureLocation +
+                        ' - ' +
+                        reservation.flight.landingLocation}
+                    </Paragraph>
                   </Box>
                 </TableCell>
-                
 
                 <TableCell align="left" colSpan={2} sx={{ px: 0, textTransform: 'capitalize' }}>
                   <div>
                     <Typography variant="caption" display="div">
-                  {(new Date(reservation.flight.departureTimestamp).toLocaleString())}
-                  </Typography></div><div>
-                  <Typography variant="caption" display="div">
-                  {(new Date(reservation.flight.landingTimestamp).toLocaleString())}
-                  </Typography></div>
-
-                  
+                      {new Date(reservation.flight.departureTimestamp).toLocaleString(
+                        'en-UK',
+                        dateOptions
+                      )}
+                    </Typography>
+                  </div>
+                  <div>
+                    <Typography variant="caption" display="div">
+                      {new Date(reservation.flight.landingTimestamp).toLocaleString(
+                        'en-UK',
+                        dateOptions
+                      )}
+                    </Typography>
+                  </div>
                 </TableCell>
 
                 <TableCell sx={{ px: 0 }} align="left" colSpan={2}>
                   {hasDepartured(reservation.flight.departureTimestamp) ? (
-                    isFling(reservation.flight)  ? (
+                    isFling(reservation.flight) ? (
                       <Small bgcolor={bgSecondary}>Curently is flying</Small>
                     ) : (
                       <Small bgcolor={bgError}>Landed Successfully</Small>
@@ -263,13 +280,9 @@ function YourReservations (props) {
                 </TableCell>
 
                 <TableCell sx={{ px: 0 }} colSpan={1}>
-                  {/* <div  onClick={ChangeSelected(reservation)}> */}
-                  <IconButton onClick={event => ChangeSelected(event,reservation)}>
-                    <SelectButton
-                    id = {reservation.id}
-                    />
+                  <IconButton onClick={(event) => ChangeSelected(event, reservation)}>
+                    <SelectButton id={reservation.id} />
                   </IconButton>
-                  {/* </div> */}
                 </TableCell>
               </TableRow>
             ))}
@@ -278,7 +291,6 @@ function YourReservations (props) {
       </Box>
     </Card>
   );
-};
-
+}
 
 export default YourReservations;

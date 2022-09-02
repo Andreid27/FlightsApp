@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import static org.company.APImethods.POST.postRequest;
 
 public class ReservationsService {
-    public static void reservation(HttpExchange exchange) throws IOException, ParseException, SQLException {
+    public static void getReservation(HttpExchange exchange) throws IOException, ParseException, SQLException {
         boolean successfulRegister = false;
         JSONObject jsonObject = postRequest(exchange);
         User user = new Gson().fromJson(jsonObject.toString(), User.class);

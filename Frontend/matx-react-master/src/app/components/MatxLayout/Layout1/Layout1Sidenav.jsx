@@ -71,6 +71,7 @@ const Layout1Sidenav = () => {
         },
       },
     });
+    console.log(sidebarSettings);
   };
 
   const handleSidenavToggle = () => {
@@ -84,7 +85,7 @@ const Layout1Sidenav = () => {
           <Hidden smDown>
             <Switch
               onChange={handleSidenavToggle}
-              checked={leftSidebar.mode !== 'full'}
+              checked={leftSidebar.mode !== 'compact'}
               color="secondary"
               size="small"
             />

@@ -5,13 +5,15 @@ public class User {
     private String email;
     private String password;
     private int userId;
+    private String userRole;
 
 
-    public User(String userName, String email, String password, int userId) {
+    public User(String userName, String email, String password, int userId, String userRole) {
         this.userName = userName;
         this.email = email;
         this.password = password;
-        this.userId=userId;
+        this.userId = userId;
+        this.userRole = userRole;
     }
 
     public String getUserName() {
@@ -30,6 +32,10 @@ public class User {
         return userId;
     }
 
+    public String getUserRole() {
+        return userRole;
+    }
+
     @Override
     public String toString() {
         return "{" +
@@ -37,12 +43,13 @@ public class User {
                 ", \"email\":\"" + email + '\"' +
                 ", \"password\":\"" + password + '\"' +
                 ", \"userId\":\"" + userId + '\"' +
+                ", \"userRole\":\"" + userRole + '\"' +
                 "}";
     }
-//this.userName==user.getUserName()&&this.email==user.getEmail()&&
+
     public boolean verifyUser(User user){
         boolean  verified = false;
-        if(this.userId==user.getUserId()&&this.userName.equals(user.getUserName())&&this.email.equals(user.getEmail())&&this.password.equals(user.getPassword()))
+        if(this.userId==user.getUserId()&&this.userName.equals(user.getUserName())&&this.email.equals(user.getEmail())&&this.password.equals(user.getPassword())&&this.userRole.equals(user.getUserRole()))
         {verified=true;}
         return verified;
     }

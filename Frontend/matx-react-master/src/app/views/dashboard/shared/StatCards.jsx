@@ -1,5 +1,11 @@
 import { Box, Card, Grid, Icon, IconButton, styled, Tooltip } from '@mui/material';
 import { Small } from 'app/components/Typography';
+import { selectReservations } from 'app/redux/reducers/FlightSlice';
+import { isBefore } from 'date-fns';
+import { useSelector } from 'react-redux';
+import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff';
+import FlightIcon from '@mui/icons-material/Flight';
+import CardMembershipIcon from '@mui/icons-material/CardMembership';
 
 const StyledCard = styled(Card)(({ theme }) => ({
   display: 'flex',
@@ -26,13 +32,43 @@ const Heading = styled('h6')(({ theme }) => ({
   fontWeight: '500',
   color: theme.palette.primary.main,
 }));
+function getUpcomingReservationsNumber(reservations) {
+  let upComingReservations = 0;
+  reservations.forEach((reservation) => {
+    let departureTime = new Date(reservation.flight.departureTimestamp);
+    let now = new Date();
+    if (isBefore(departureTime, now)) {
+      upComingReservations += 1;
+    }
+  });
+
+  return upComingReservations;
+}
 
 const StatCards = () => {
+  const reservations = useSelector(selectReservations);
+  let UpcomingReservationsNumber = getUpcomingReservationsNumber(reservations);
   const cardList = [
-    { name: 'New Leads', amount: 3050, icon: 'group' },
-    { name: 'This week Sales', amount: '$80,500', icon: 'attach_money' },
-    { name: 'Inventory Status', amount: '8.5% Stock Surplus', icon: 'store' },
-    { name: 'Orders to deliver', amount: '305 Orders', icon: 'shopping_cart' },
+    {
+      name: 'Your Upcoming Flights Reservations',
+      amount: UpcomingReservationsNumber + ' Upcoming Reservations',
+      icon: <FlightTakeoffIcon fontSize="large" />,
+    },
+    {
+      name: 'Flights available to book',
+      amount: 'Up to 500 flights',
+      icon: <FlightIcon fontSize="large" />,
+    },
+    {
+      name: 'Inventory Status',
+      amount: '8.5% Stock Surplus',
+      icon: 'attach_money',
+    },
+    {
+      name: 'Your Total Reservations',
+      amount: reservations.length + ' Total Reservations',
+      icon: <CardMembershipIcon fontSize="large" />,
+    },
   ];
 
   return (

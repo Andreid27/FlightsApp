@@ -60,7 +60,7 @@ public class HttpServerClass {
         server.createContext("/api/rezervations", (exchange -> {
             if ("POST".equals(exchange.getRequestMethod())) {
                 try {
-                    ReservationsService.reservation(exchange);
+                    ReservationsService.getReservation(exchange);
                 } catch (ParseException e) {
                     throw new RuntimeException(e);
                 }

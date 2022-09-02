@@ -6,7 +6,7 @@ import RowCards from './shared/RowCards';
 import StatCards from './shared/StatCards';
 import StatCards2 from './shared/StatCards2';
 import YourReservations from './shared/YourReservations';
-import UpgradeCard from './shared/UpgradeCard';
+import ResevationInfo from './shared/ReservationInfo';
 
 const ContentBox = styled('div')(({ theme }) => ({
   margin: '30px',
@@ -51,16 +51,16 @@ const Analytics = () => {
 
           <Grid item lg={4} md={4} sm={12} xs={12}>
             <Card sx={{ px: 3, py: 2, mb: 3 }}>
-              <Title>Traffic Sources</Title>
+              <Title>Reservations Status</Title>
               <SubTitle>Last 30 days</SubTitle>
 
               <DoughnutChart
-                height="150px"
+                height="160px"
                 color={[palette.primary.dark, palette.primary.main, palette.primary.light]}
               />
             </Card>
 
-            <UpgradeCard />
+            <ResevationInfo />
             <Campaigns />
           </Grid>
         </Grid>

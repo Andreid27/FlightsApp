@@ -74,11 +74,14 @@ INSERT INTO zboruri VALUES
 (null,"W63257","BlueAir",2,"2022-09-15 07:35:00","2022-09-15 11:11:00","Bucharest(OTP)","Tel-Aviv(TLV)");
 INSERT INTO zboruri VALUES
 (null,"H64532","Tarom",4,"2022-09-23 8:25:00","2022-09-23 12:05:00","Bucharest(OTP)","Brussels Charleroi(CRL)");
+INSERT INTO zboruri VALUES
+(null,"M77392","Tarom",2,"2022-08-31 8:25:00","2022-09-23 12:05:00","Bucharest(OTP)","Madrid(MAD)"),
+(null,"M77392","Tarom",2,"2022-08-31 8:25:00","2022-08-31 10:27:00","Bucharest(OTP)","Paris Beauvais(BVA)");
 
 select * from zboruri;
 
 INSERT INTO rezervari VALUES
-(null,1,"01B",1);
+(null,2,"01B",5);
 
 select * from rezervari;
 
