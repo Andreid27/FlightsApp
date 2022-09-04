@@ -3,6 +3,7 @@ package org.company.APImethods;
 import com.sun.net.httpserver.Authenticator;
 import com.sun.net.httpserver.BasicAuthenticator;
 import org.apache.http.protocol.HttpContext;
+import org.company.Services.FlightsService;
 import org.company.Services.LoginService;
 import org.company.Services.RegisterService;
 import org.company.Services.ReservationsService;
@@ -73,23 +74,23 @@ public class HttpServerClass {
             }
         }));
 
-//        server.createContext("/api/flights", (exchange -> {
-//            if ("GET".equals(exchange.getRequestMethod())) {
-//                try {
-//                    ReservationsService.getReservation(exchange);
-//                } catch (ParseException e) {
-//                    throw new RuntimeException(e);
-//                }
-//                catch (SQLException e) {
-//                    throw new RuntimeException(e);
-//                }
-//            } else if ("OPTIONS".equals(exchange.getRequestMethod())) {
-//                OPTIONS.optionsMethod(exchange);
-//
-//            } else {
-//                exchange.sendResponseHeaders(405, -1);// 405 Method Not Allowed
-//            }
-//        }));
+        server.createContext("/api/flights", (exchange -> {
+            if ("GET".equals(exchange.getRequestMethod())) {
+                try {
+                    FlightsService.getUpcomingFlights(exchange);
+                } catch (ParseException e) {
+                    throw new RuntimeException(e);
+                }
+                catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            } else if ("OPTIONS".equals(exchange.getRequestMethod())) {
+                OPTIONS.optionsMethod(exchange);
+
+            } else {
+                exchange.sendResponseHeaders(405, -1);// 405 Method Not Allowed
+            }
+        }));
 
 
 

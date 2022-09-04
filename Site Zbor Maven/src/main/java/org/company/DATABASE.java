@@ -3,6 +3,7 @@ package org.company;
 import org.company.Models.*;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class DATABASE {
@@ -130,5 +131,38 @@ public class DATABASE {
         }
         return reservations;
     }
+    public static ArrayList<Flight> getUpcomingFlights(User user) throws SQLException {
+        ArrayList<Flight> flights = new ArrayList<>();
+        int userId = user.getUserId();
+        String getUserReservations = "SELECT\n" +
+                "  zbor.id as zbor_id,zbor.FlightNumber,\n" +
+                "  zbor.aeronava as aeronava_id,aeronava.Producator, aeronava.Model,aeronava.nr_max_locuri,\n" +
+                "  zbor.Companie,zbor.departure_timestamp,zbor.landing_timestamp, zbor.departure_location,zbor.landing_location\n" +
+                "FROM zboruri zbor \n" +
+                "JOIN aeronave aeronava\n" +
+                "    ON aeronava.id=zbor.aeronava WHERE departure_timestamp>=now()"+";";
+        Connection connection = startDBconnection();
+        Statement statement = connection.createStatement();
+        try(ResultSet resultSet = statement.executeQuery(getUserReservations)){
+            while (resultSet.next()){
+                int zbor_id = resultSet.getInt("zbor_id");
+                String FlightNumber = resultSet.getString("FlightNumber");
+                int aeronava_id = resultSet.getInt("aeronava_id");
+                String Producator = resultSet.getString("Producator");
+                String Model = resultSet.getString("Model");
+                int nr_max_locuri = resultSet.getInt("nr_max_locuri");
+                String Companie = resultSet.getString("Companie");
+                String departure_timestamp = resultSet.getString("departure_timestamp");
+                String landing_timestamp = resultSet.getString("landing_timestamp");
+                String departure_location = resultSet.getString("departure_location");
+                String landing_location = resultSet.getString("landing_location");
+                flights.add(new Flight(zbor_id,FlightNumber,Companie,new Airplane(aeronava_id,Producator,Model,nr_max_locuri),departure_timestamp,landing_timestamp,departure_location,landing_location));
+            }
+        }
+        return flights;
+    }
+
+
+
 
 }

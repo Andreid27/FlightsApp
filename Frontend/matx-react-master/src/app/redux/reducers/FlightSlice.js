@@ -12,13 +12,19 @@ import { element } from 'prop-types';
 export const getUserFlights = createAsyncThunk(
   'flightApp/rezervations/getUserFlights',
   async (user) => {
-    const response = await axios.post(apiSpec.REZERVATIONS, {
-      userName: user.userName,
-      email: user.email,
-      password: user.password,
-      userId: user.userId,
+    const response = await axios.get(apiSpec.REZERVATIONS, {
+      params: {
+        password: user.password,
+        userId: user.userId,
+      },
     });
     const data = await response.data;
+
+    // const res = await axios.get('http://localhost:8080/api/usersFlights', {
+    //   params: {
+    //     'Test-Header': 'test-value',
+    //   },
+    // });
 
     // console.log(response.data);
 

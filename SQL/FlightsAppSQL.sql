@@ -44,6 +44,11 @@ CREATE TABLE zboruri(
 	FOREIGN KEY(aeronava) REFERENCES aeronave(id)
 );
 
+ALTER TABLE zboruri
+ADD column issued_by int NOT NULL,
+ADD FOREIGN KEY(issued_by) REFERENCES users(id);
+
+
 
 CREATE TABLE rezervari(
 	id int NOT NULL auto_increment,
@@ -79,6 +84,11 @@ INSERT INTO zboruri VALUES
 (null,"M77392","Tarom",2,"2022-08-31 8:25:00","2022-08-31 10:27:00","Bucharest(OTP)","Paris Beauvais(BVA)");
 
 select * from zboruri;
+
+SELECT * 
+  FROM zboruri
+ WHERE departure_timestamp>=now();
+ 
 
 INSERT INTO rezervari VALUES
 (null,2,"01B",5);

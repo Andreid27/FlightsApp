@@ -11,10 +11,7 @@ import java.util.Map;
 
 public class GET {
     public static Map getRequest(HttpExchange exchange) {
-        System.out.println(exchange.getRequestURI());
         Map getMap = queryToMap(exchange.getRequestURI().getQuery());
-        System.out.println(getMap);
-
         return getMap;
     }
 
