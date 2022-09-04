@@ -16,6 +16,11 @@ public class User {
         this.userRole = userRole;
     }
 
+    public User(int userId,String password) {
+        this.password = password;
+        this.userId = userId;
+    }
+
     public String getUserName() {
         return userName;
     }
@@ -49,7 +54,7 @@ public class User {
 
     public boolean verifyUser(User user){
         boolean  verified = false;
-        if(this.userId==user.getUserId()&&this.userName.equals(user.getUserName())&&this.email.equals(user.getEmail())&&this.password.equals(user.getPassword())&&this.userRole.equals(user.getUserRole()))
+        if(this.userId==user.getUserId()&&this.password.equals(user.getPassword()))
         {verified=true;}
         return verified;
     }

@@ -83,7 +83,7 @@ public class DATABASE {
 
 
 
-    public static boolean verifyUser(User userToVerify) {
+    public static User getUserById(User userToVerify) {
         User DBUser = null;
         try (Connection connection = startDBconnection();
              Statement statement = connection.createStatement()) {
@@ -101,7 +101,7 @@ public class DATABASE {
             }
         } catch (SQLException e) {
         }
-        return userToVerify.verifyUser(DBUser);
+        return DBUser;
     }
 
     public static ArrayList<Reservation> getUserRezervations(User user) throws SQLException {
