@@ -12,6 +12,12 @@ import {
   IconButton,
   InputLabel,
   Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
   TextField,
   Typography,
   useFormControl,
@@ -24,41 +30,26 @@ import { Span } from '../Typography';
 import useSettings from 'app/hooks/useSettings';
 import { makeStyles } from '@mui/styles';
 import { useDispatch } from 'react-redux';
-import { getUpcomingFlights, getUserReservations } from 'app/redux/reducers/FlightSlice';
+import {
+  getUpcomingFlights,
+  getUserReservations,
+  selectUpcomingFlightsAdapter,
+} from 'app/redux/reducers/FlightSlice';
 import { LocalizationProvider } from '@mui/x-date-pickers-pro';
 import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { inputLabelClasses } from '@mui/material/InputLabel';
+import { useSelector } from 'react-redux';
+import _ from 'lodash';
 
-const CustomTextField = styled(TextField)(({ theme }) => ({
-  color: theme.status.danger,
-  '&.Mui-checked': {
-    color: theme.status.danger,
-  },
-
-  '&.MuiInputLabel-root': {
-    color: 'red !important',
-  },
-  '&.MuiFormLabel-root': {
-    color: 'red !important',
-  },
-  '&.MuiOutlinedInput': {
-    color: 'red !important',
-  },
-  '&.MuiTextField-root': {
-    color: 'red !important',
-  },
-  '&.MuiOutlinedInput-notchedOutline': {
-    color: 'red !important',
-  },
-  '&:hover': {
-    backgroundColor: 'cyan !important',
-  },
-  '&.MuiInputLabel': {
-    root: {
-      color: 'red !important',
-    },
-  },
+const CustomDialogTitle = styled(DialogTitle)(({ theme }) => ({
+  paddingTop: '30px',
+  marginBottom: '0px',
+  color: 'black !important',
+}));
+const CustomDialogContentText = styled(DialogContentText)(({ theme }) => ({
+  paddingTop: '0px',
+  color: 'black !important',
 }));
 
 const useStyles = makeStyles({
@@ -78,6 +69,7 @@ const useStyles = makeStyles({
 
 const SecondarySidebarContent = () => {
   const [open, setOpen] = useState(true);
+  const [findFilterToggle, setFindFilterToggle] = useState(false);
   let nextDate = new Date();
   const [date, setDate] = useState([Date.now(), nextDate.setDate(nextDate.getDate() + 1)]);
   const dispatch = useDispatch();
@@ -92,23 +84,77 @@ const SecondarySidebarContent = () => {
     dispatch(getUpcomingFlights());
   }, []);
 
-  // const handleClickOpen = () => {
-  //   setOpen(true);
-  // };
+  const upcomingFlights = useSelector(selectUpcomingFlightsAdapter);
+
+  const flightFilter = {
+    departureLocation: null,
+    landingLocation: null,
+    departureTimestamp: date[0],
+    landingTimestamp: date[1],
+  };
+
+  const handleFindFlights = () => {
+    setOpen(true);
+    setFindFilterToggle(true);
+  };
 
   const handleClose = () => {
     setOpen(false);
     toggle();
+    setFindFilterToggle(false);
   };
-  return (
+  return findFilterToggle ? (
+    <Dialog open={open} aria-labelledby="edit-apartment" fullWidth>
+      <DialogContent
+        sx={{
+          color: 'error.main',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-around',
+          minWidth: '100%',
+          minHeight: '14rem',
+          bgcolor: '#ffffff',
+          pt: 0,
+        }}
+      >
+        <TableContainer component={Paper}>
+          <Table aria-label="collapsible table">
+            <TableHead>
+              <TableRow>
+                <TableCell />
+                <TableCell>Dessert (100g serving)</TableCell>
+                <TableCell align="right">Calories</TableCell>
+                <TableCell align="right">Fat&nbsp;(g)</TableCell>
+                <TableCell align="right">Carbs&nbsp;(g)</TableCell>
+                <TableCell align="right">Protein&nbsp;(g)</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {/* {rows.map((row) => (
+            <Row key={row.name} row={row} />
+          ))} */}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <DialogActions sx={{ bgcolor: '#ffffff' }}>
+          <Button onClick={handleClose} color="secondary">
+            Cancel
+          </Button>
+          <Button onClick={setFindFilterToggle} color="primary">
+            BOOK NOW
+          </Button>
+        </DialogActions>
+      </DialogContent>
+    </Dialog>
+  ) : (
     <div>
       <Dialog open={open} aria-labelledby="edit-apartment" fullWidth>
-        <DialogTitle sx={{ bgcolor: '#ffffff', color: 'primary.main' }} id="edit-apartment">
-          Edit
-        </DialogTitle>
-        <DialogContentText sx={{ bgcolor: '#ffffff', color: 'primary.main', pl: 3, pb: 0 }}>
-          {'Please, edit the flat and the floor of your apartment.'}
-        </DialogContentText>
+        <CustomDialogTitle sx={{ bgcolor: '#ffffff', color: 'primary.main' }} id="edit-apartment">
+          New Reservation
+        </CustomDialogTitle>
+        <CustomDialogContentText sx={{ bgcolor: '#ffffff', color: 'primary.main', pl: 3, pb: 0 }}>
+          {'Please, enter the following details to book a new flight:'}
+        </CustomDialogContentText>
         <DialogContent
           sx={{
             color: 'error.main',
@@ -116,7 +162,7 @@ const SecondarySidebarContent = () => {
             flexDirection: 'column',
             justifyContent: 'space-around',
             minWidth: '100%',
-            minHeight: '20rem',
+            minHeight: '14rem',
             bgcolor: '#ffffff',
             pt: 0,
           }}
@@ -124,12 +170,14 @@ const SecondarySidebarContent = () => {
           <div style={{ display: 'flex', justifyContent: 'space-around', p: 0, columnGap: '20px' }}>
             <Autocomplete
               id="combo-box-demo"
-              options={top100Films}
+              options={[...new Set(upcomingFlights.map((item) => item.departureLocation))]}
               style={{
                 width: '45%',
               }}
-              onChange={() => {}}
-              getOptionLabel={(option) => option.label}
+              onChange={(event, value) => {
+                flightFilter.departureLocation = value;
+              }}
+              getOptionLabel={(option) => option}
               PaperComponent={({ children }) => (
                 <Paper style={{ color: '#010b1c', background: 'white' }}>{children}</Paper>
               )}
@@ -159,9 +207,12 @@ const SecondarySidebarContent = () => {
                 width: '45%',
                 color: '#010b1c',
               }}
-              options={top100Films}
-              onChange={() => {}}
-              getOptionLabel={(option) => option.label}
+              options={[...new Set(upcomingFlights.map((item) => item.landingLocation))]}
+              onChange={(event, value) => {
+                flightFilter.landingLocation = value;
+                console.log(flightFilter);
+              }}
+              getOptionLabel={(option) => option}
               PaperComponent={({ children }) => (
                 <Paper style={{ color: '#010b1c', background: 'white' }}>{children}</Paper>
               )}
@@ -232,33 +283,18 @@ const SecondarySidebarContent = () => {
               />
             </LocalizationProvider>
           </div>
-          <TextField autoFocus margin="dense" id="floor" label="Floor" type="text" fullWidth />
         </DialogContent>
         <DialogActions sx={{ bgcolor: '#ffffff' }}>
           <Button onClick={handleClose} color="secondary">
             Cancel
           </Button>
-          <Button onClick={handleClose} color="primary">
-            Submit
+          <Button variant="contained" onClick={setFindFilterToggle} color="secondary">
+            Find Flights
           </Button>
         </DialogActions>
       </Dialog>
     </div>
   );
 };
-
-const top100Films = [
-  { label: 'The Shawshank Redemption', year: 1994 },
-  { label: 'The Godfather', year: 1972 },
-  { label: 'The Godfather: Part II', year: 1974 },
-  { label: 'The Dark Knight', year: 2008 },
-  { label: '12 Angry Men', year: 1957 },
-  { label: "Schindler's List", year: 1993 },
-  { label: 'Pulp Fiction', year: 1994 },
-  {
-    label: 'The Lord of the Rings: The Return of the King',
-    year: 2003,
-  },
-];
 
 export default SecondarySidebarContent;

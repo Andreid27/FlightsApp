@@ -5,7 +5,9 @@ import SecondarySidebarToggle from './SecondarySidebarToggle';
 
 const SecondarySidebar = () => {
   const { settings } = useSettings();
-  const secondarySidebarTheme = settings.themes[settings.secondarySidebar.theme];
+  const secondarySidebarTheme = settings.themes[settings.layout1Settings.topbar.theme];
+
+  console.log(settings.themes);
 
   return (
     <SecondarySidenavTheme theme={secondarySidebarTheme}>

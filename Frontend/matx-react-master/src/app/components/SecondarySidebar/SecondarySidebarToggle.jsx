@@ -40,7 +40,7 @@ const SecondarySidebarToggle = () => {
           <Icon sx={{ color: textColor }}>
             <AddIcon />
           </Icon>
-        </Fab>
+        </Fab> //DE MODIFICAT CULOARE AICI CUSTOM
       )}
     </Toggle>
   );

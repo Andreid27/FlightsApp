@@ -24,7 +24,7 @@ export const getUserReservations = createAsyncThunk(
 );
 
 export const getUpcomingFlights = createAsyncThunk(
-  'flightApp/rezervations/getUpcomingFlights123',
+  'flightApp/rezervations/getUpcomingFlights',
   async (user) => {
     const response = await axios.get(apiSpec.UPCOMING_FLIGHTS, {
       params: {
