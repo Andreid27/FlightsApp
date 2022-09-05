@@ -44,7 +44,7 @@ const LayoutContainer = styled(Box)(({ width, secondarySidebar }) => ({
   position: 'relative',
   overflow: 'hidden',
   transition: 'all 0.3s ease',
-  marginRight: secondarySidebar.open ? 50 : 0,
+  // marginRight: secondarySidebar.open ? 50 : 0,
 }));
 
 const Layout1 = () => {

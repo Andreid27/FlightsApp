@@ -1,4 +1,5 @@
 export const LOCAL = 'http://localhost:8080';
-export const LOGIN = 'http://localhost:8080/api/login';
-export const REGISTER = 'http://localhost:8080/api/register';
-export const REZERVATIONS = 'http://localhost:8080/api/rezervations';
+export const LOGIN = LOCAL + '/api/login';
+export const REGISTER = LOCAL + '/api/register';
+export const REZERVATIONS = LOCAL + '/api/rezervations';
+export const UPCOMING_FLIGHTS = LOCAL + '/api/flights';

@@ -19,7 +19,7 @@ import {
 import DoneIcon from '@mui/icons-material/Done';
 import { Paragraph } from 'app/components/Typography';
 import {
-  getUserFlights,
+  getUserReservations,
   selectReservations,
   setSelectedReservation,
 } from 'app/redux/reducers/FlightSlice';
@@ -123,7 +123,7 @@ function YourReservations(props) {
   };
 
   useEffect(() => {
-    dispatch(getUserFlights(user));
+    dispatch(getUserReservations(user));
   }, []);
   const reservations = useSelector(selectReservations);
   var dateOptions = {
@@ -169,11 +169,6 @@ function YourReservations(props) {
       id,
     });
   };
-  useEffect(() => {
-    console.log(order);
-  }, [order]);
-
-  // const [SelectedReservation, setSelectedReservation] = useState();
 
   function ChangeSelected(event, reservation) {
     if (event.nativeEvent.defaultPrevented) {

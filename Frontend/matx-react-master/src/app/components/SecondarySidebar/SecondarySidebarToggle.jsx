@@ -2,6 +2,7 @@ import { Fab, Icon, IconButton } from '@mui/material';
 import { styled, useTheme } from '@mui/system';
 import useSettings from 'app/hooks/useSettings';
 import clsx from 'clsx';
+import AddIcon from '@mui/icons-material/Add';
 
 const Toggle = styled('div')(() => ({
   position: 'fixed',
@@ -28,15 +29,17 @@ const SecondarySidebarToggle = () => {
 
   return (
     <Toggle className={clsx({ open: settings.secondarySidebar.open })}>
-      {settings.secondarySidebar.open && (
+      {/* {settings.secondarySidebar.open && (
         <IconButton onClick={toggle} size="small" aria-label="toggle">
           <Icon sx={{ color: textColor }}>close</Icon>
-        </IconButton>
-      )}
+        </IconButton>d
+      )} */}
 
       {!settings.secondarySidebar.open && (
         <Fab color="primary" aria-label="expand" onClick={toggle}>
-          <Icon sx={{ color: textColor }}>settings</Icon>
+          <Icon sx={{ color: textColor }}>
+            <AddIcon />
+          </Icon>
         </Fab>
       )}
     </Toggle>

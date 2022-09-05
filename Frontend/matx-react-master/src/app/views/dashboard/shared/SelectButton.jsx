@@ -1,6 +1,6 @@
 import DoneIcon from '@mui/icons-material/Done';
 import { Paragraph } from 'app/components/Typography';
-import { getUserFlights, selectReservations } from 'app/redux/reducers/FlightSlice';
+import { getUserReservations, selectReservations } from 'app/redux/reducers/FlightSlice';
 import { React, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
