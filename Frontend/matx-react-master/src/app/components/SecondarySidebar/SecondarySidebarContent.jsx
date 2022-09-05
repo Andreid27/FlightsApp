@@ -41,6 +41,7 @@ import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { inputLabelClasses } from '@mui/material/InputLabel';
 import { useSelector } from 'react-redux';
 import _ from 'lodash';
+import FlightDetailsTable from './FlightDetailsTable';
 
 const CustomDialogTitle = styled(DialogTitle)(({ theme }) => ({
   paddingTop: '30px',
@@ -86,11 +87,17 @@ const SecondarySidebarContent = () => {
 
   const upcomingFlights = useSelector(selectUpcomingFlightsAdapter);
 
-  const flightFilter = {
+  const [flightFilter, setFlightFilter] = useState({
     departureLocation: null,
     landingLocation: null,
     departureTimestamp: date[0],
     landingTimestamp: date[1],
+  });
+  const updateFlightFilterState = (name, value) => {
+    setFlightFilter((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
   };
 
   const handleFindFlights = () => {
@@ -117,30 +124,18 @@ const SecondarySidebarContent = () => {
           pt: 0,
         }}
       >
-        <TableContainer component={Paper}>
-          <Table aria-label="collapsible table">
-            <TableHead>
-              <TableRow>
-                <TableCell />
-                <TableCell>Dessert (100g serving)</TableCell>
-                <TableCell align="right">Calories</TableCell>
-                <TableCell align="right">Fat&nbsp;(g)</TableCell>
-                <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-                <TableCell align="right">Protein&nbsp;(g)</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {/* {rows.map((row) => (
-            <Row key={row.name} row={row} />
-          ))} */}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <CustomDialogTitle sx={{ bgcolor: '#ffffff', color: 'primary.main' }} id="edit-apartment">
+          Available flights
+        </CustomDialogTitle>
+        <CustomDialogContentText sx={{ bgcolor: '#ffffff', color: 'primary.main', pl: 3, pb: 3 }}>
+          {'We found the following flights for you:'}
+        </CustomDialogContentText>
+        <FlightDetailsTable flightFilter={flightFilter} flights={upcomingFlights} />
         <DialogActions sx={{ bgcolor: '#ffffff' }}>
           <Button onClick={handleClose} color="secondary">
             Cancel
           </Button>
-          <Button onClick={setFindFilterToggle} color="primary">
+          <Button variant="contained" onClick={setFindFilterToggle} color="secondary">
             BOOK NOW
           </Button>
         </DialogActions>
@@ -175,7 +170,7 @@ const SecondarySidebarContent = () => {
                 width: '45%',
               }}
               onChange={(event, value) => {
-                flightFilter.departureLocation = value;
+                updateFlightFilterState('departureLocation', value);
               }}
               getOptionLabel={(option) => option}
               PaperComponent={({ children }) => (
@@ -209,8 +204,7 @@ const SecondarySidebarContent = () => {
               }}
               options={[...new Set(upcomingFlights.map((item) => item.landingLocation))]}
               onChange={(event, value) => {
-                flightFilter.landingLocation = value;
-                console.log(flightFilter);
+                updateFlightFilterState('landingLocation', value);
               }}
               getOptionLabel={(option) => option}
               PaperComponent={({ children }) => (
@@ -248,6 +242,10 @@ const SecondarySidebarContent = () => {
                 sx={{ width: '100%' }}
                 onChange={(newValue) => {
                   setDate(newValue);
+                  updateFlightFilterState('departureTimestamp', newValue[0].$d);
+                  if (newValue[1]) {
+                    updateFlightFilterState('landingTimestamp', newValue[1].$d);
+                  }
                 }}
                 renderInput={(startProps, endProps) => (
                   <React.Fragment>
@@ -288,7 +286,7 @@ const SecondarySidebarContent = () => {
           <Button onClick={handleClose} color="secondary">
             Cancel
           </Button>
-          <Button variant="contained" onClick={setFindFilterToggle} color="secondary">
+          <Button variant="contained" onClick={handleFindFlights} color="secondary">
             Find Flights
           </Button>
         </DialogActions>
