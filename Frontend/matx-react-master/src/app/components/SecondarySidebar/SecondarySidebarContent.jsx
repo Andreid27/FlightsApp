@@ -42,6 +42,7 @@ import { inputLabelClasses } from '@mui/material/InputLabel';
 import { useSelector } from 'react-redux';
 import _ from 'lodash';
 import FlightDetailsTable from './FlightDetailsTable';
+import { isBefore } from 'date-fns';
 
 const CustomDialogTitle = styled(DialogTitle)(({ theme }) => ({
   paddingTop: '30px',
@@ -52,21 +53,6 @@ const CustomDialogContentText = styled(DialogContentText)(({ theme }) => ({
   paddingTop: '0px',
   color: 'black !important',
 }));
-
-const useStyles = makeStyles({
-  option: {
-    '& .MuiInputBase-input.MuiAutocomplete-input': {
-      backgroundColor: '#fffff',
-      color: 'green',
-    },
-    '&:hover': {
-      backgroundColor: 'cyan !important',
-    },
-    TextField: {
-      color: '#010b1c',
-    },
-  },
-});
 
 const SecondarySidebarContent = () => {
   const [open, setOpen] = useState(true);
@@ -86,6 +72,11 @@ const SecondarySidebarContent = () => {
   }, []);
 
   const upcomingFlights = useSelector(selectUpcomingFlightsAdapter);
+  const [bookNowDisable, setBookNowDisable] = useState(true);
+  const bookNowEnable = (en) => {
+    // 👇️ take parameter passed from Child component
+    setBookNowDisable(en);
+  };
 
   const [flightFilter, setFlightFilter] = useState({
     departureLocation: null,
@@ -130,13 +121,22 @@ const SecondarySidebarContent = () => {
         <CustomDialogContentText sx={{ bgcolor: '#ffffff', color: 'primary.main', pl: 3, pb: 3 }}>
           {'We found the following flights for you:'}
         </CustomDialogContentText>
-        <FlightDetailsTable flightFilter={flightFilter} flights={upcomingFlights} />
+        <FlightDetailsTable
+          flightFilter={flightFilter}
+          flights={upcomingFlights}
+          bookNowEnable={bookNowEnable}
+        />
         <DialogActions sx={{ bgcolor: '#ffffff' }}>
           <Button onClick={handleClose} color="secondary">
             Cancel
           </Button>
-          <Button variant="contained" onClick={setFindFilterToggle} color="secondary">
-            BOOK NOW
+          <Button
+            variant="contained"
+            onClick={setFindFilterToggle}
+            color="secondary"
+            disabled={bookNowDisable}
+          >
+            Book Now
           </Button>
         </DialogActions>
       </DialogContent>
@@ -239,6 +239,7 @@ const SecondarySidebarContent = () => {
             >
               <DateRangePicker
                 value={date}
+                inputFormat="DD/MM/YYYY"
                 sx={{ width: '100%' }}
                 onChange={(newValue) => {
                   setDate(newValue);
@@ -286,7 +287,16 @@ const SecondarySidebarContent = () => {
           <Button onClick={handleClose} color="secondary">
             Cancel
           </Button>
-          <Button variant="contained" onClick={handleFindFlights} color="secondary">
+          <Button
+            variant="contained"
+            onClick={handleFindFlights}
+            color="secondary"
+            disabled={
+              flightFilter.departureLocation === null ||
+              flightFilter.landingLocation === null ||
+              isBefore(flightFilter.departureTimestamp, Date().getDate) //DE CONTINUAT LOGICA !!!!!!!!!!!!!!!!!
+            }
+          >
             Find Flights
           </Button>
         </DialogActions>

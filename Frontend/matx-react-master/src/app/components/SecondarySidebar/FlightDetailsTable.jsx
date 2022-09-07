@@ -15,6 +15,9 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import _ from 'lodash';
 import { isBefore } from 'date-fns';
+import { TextField } from '@mui/material';
+import { useDispatch } from 'react-redux';
+import { resetNewReservation, setNewReservation } from 'app/redux/reducers/FlightSlice';
 
 function createData(name, calories, fat, carbs, protein, price) {
   return {
@@ -41,52 +44,95 @@ function createData(name, calories, fat, carbs, protein, price) {
 
 function Row(props) {
   const { row } = props;
-  const [open, setOpen] = React.useState(false);
+  const [nrSeats, setNrSeats] = React.useState(1);
+  const dispatch = useDispatch();
+  const NewReservation = {
+    flightId: row.id,
+    flightNumber: row.flightNumber,
+    seatsNuber: nrSeats,
+  };
+
+  if (props.open) {
+    dispatch(setNewReservation(NewReservation));
+  }
 
   return (
     <React.Fragment>
       <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
         <TableCell>
-          <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
-            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+          <IconButton
+            aria-label="expand row"
+            size="small"
+            onClick={() => props.onClick(props.open ? '' : row.id)}
+          >
+            {props.open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
-        <TableCell component="th" scope="row">
-          {row.name}
+        <TableCell component="th" scope="row" colSpan={2}>
+          {row.departureLocation}
         </TableCell>
-        <TableCell align="right">{row.calories}</TableCell>
-        <TableCell align="right">{row.fat}</TableCell>
-        <TableCell align="right">{row.carbs}</TableCell>
+        <TableCell align="left" colSpan={2}>
+          {row.landingLocation}
+        </TableCell>
+        <TableCell align="left">
+          <Typography display="div">
+            {new Date(row.departureTimestamp).toLocaleDateString('en-UK')}
+          </Typography>
+        </TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-          <Collapse in={open} timeout="auto" unmountOnExit>
+          <Collapse in={props.open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
               <Typography variant="h6" gutterBottom component="div">
-                History
+                Flight Details
               </Typography>
               <Table size="small" aria-label="purchases">
                 <TableHead>
                   <TableRow>
-                    <TableCell>Date</TableCell>
-                    <TableCell>Customer</TableCell>
-                    <TableCell align="right">Amount</TableCell>
-                    <TableCell align="right">Total price ($)</TableCell>
+                    <TableCell component="th" scope="row" colSpan={2} sx={{ pl: 2 }}>
+                      Company
+                    </TableCell>
+                    <TableCell colSpan={2} align="left">
+                      Flight Number
+                    </TableCell>
+                    <TableCell align="left">Departure</TableCell>
+                    <TableCell align="left">Landing</TableCell>
+                    <TableCell align="left">Adults:</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {row.history.map((historyRow) => (
-                    <TableRow key={historyRow.date}>
-                      <TableCell component="th" scope="row">
-                        {historyRow.date}
-                      </TableCell>
-                      <TableCell>{historyRow.customerId}</TableCell>
-                      <TableCell align="right">{historyRow.amount}</TableCell>
-                      <TableCell align="right">
-                        {Math.round(historyRow.amount * row.price * 100) / 100}
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                  <TableCell align="left" colSpan={2} sx={{ pl: 2 }}>
+                    {row.company}
+                  </TableCell>
+                  <TableCell align="left" colSpan={2}>
+                    {row.flightNumber}
+                  </TableCell>
+                  <TableCell align="left">
+                    {new Date(row.departureTimestamp).toLocaleTimeString([], {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                      hour12: false,
+                    })}
+                  </TableCell>
+                  <TableCell align="left">
+                    {new Date(row.landingTimestamp).toLocaleTimeString([], {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                      hour12: false,
+                    })}
+                  </TableCell>
+                  <TableCell align="left">
+                    <TextField
+                      type="number"
+                      value={nrSeats}
+                      onChange={(event) => {
+                        if (event.target.value >= 1) {
+                          setNrSeats(event.target.value);
+                        }
+                      }}
+                    ></TextField>
+                  </TableCell>
                 </TableBody>
               </Table>
             </Box>
@@ -97,57 +143,42 @@ function Row(props) {
   );
 }
 
-Row.propTypes = {
-  row: PropTypes.shape({
-    calories: PropTypes.number.isRequired,
-    carbs: PropTypes.number.isRequired,
-    fat: PropTypes.number.isRequired,
-    history: PropTypes.arrayOf(
-      PropTypes.shape({
-        amount: PropTypes.number.isRequired,
-        customerId: PropTypes.string.isRequired,
-        date: PropTypes.string.isRequired,
-      })
-    ).isRequired,
-    name: PropTypes.string.isRequired,
-    price: PropTypes.number.isRequired,
-    protein: PropTypes.number.isRequired,
-  }).isRequired,
-};
-
-const rows = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0, 3.99),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3, 4.99),
-  createData('Eclair', 262, 16.0, 24, 6.0, 3.79),
-  createData('Cupcake', 305, 3.7, 67, 4.3, 2.5),
-  createData('Gingerbread', 356, 16.0, 49, 3.9, 1.5),
-];
-
 export default function FlightDetailsTable(props) {
+  const dispatch = useDispatch();
+  const [openRow, setOpenRow] = React.useState(null);
+  if (openRow == '') {
+    dispatch(resetNewReservation());
+    props.bookNowEnable(true);
+  }
+  if (typeof openRow == 'number') {
+    props.bookNowEnable(false);
+  }
+
   return (
     <TableContainer component={Paper}>
       <Table aria-label="collapsible table">
         <TableHead>
           <TableRow>
             <TableCell />
-            <TableCell colSpan={1}>From</TableCell>
-            <TableCell align="right" colSpan={1}>
+            <TableCell colSpan={2}>From</TableCell>
+            <TableCell align="left" colSpan={2}>
               To
             </TableCell>
-            <TableCell align="right">Date</TableCell>
-            <TableCell align="right">Time</TableCell>
+            <TableCell align="left">Date</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {_.filter(props.flights, function (f) {
-            if (isBefore(props.flightFilter.departureTimestamp, new Date(f.departureTimestamp))) {
+            if (
+              isBefore(props.flightFilter.departureTimestamp, new Date(f.departureTimestamp)) &&
+              f.departureLocation === props.flightFilter.departureLocation &&
+              f.landingLocation === props.flightFilter.landingLocation
+            ) {
               return f;
-            } // DE CONTINUAT LOGICA FILTRARE PT DESTINATII SI LEGARE DESTINATII
-          }).map(
-            (row) =>
-              // <Row key={row.departureLocation} row={row} />
-              row.landingLocation
-          )}
+            }
+          }).map((row) => (
+            <Row key={row.id} row={row} open={row.id == openRow} onClick={(id) => setOpenRow(id)} />
+          ))}
         </TableBody>
       </Table>
     </TableContainer>

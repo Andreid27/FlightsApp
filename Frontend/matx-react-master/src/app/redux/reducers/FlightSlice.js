@@ -54,6 +54,9 @@ const reservationsAdapter = createEntityAdapter({
 const upcomingFlightsAdapter = createEntityAdapter({
   selectId: (upcomingFlight) => upcomingFlight.id,
 });
+const NewFlightsAdapter = createEntityAdapter({
+  selectId: (NewFlightsAdapter) => NewFlightsAdapter.flightId,
+});
 
 export const { selectAll: selectUpcomingFlightsAdapter } = upcomingFlightsAdapter.getSelectors(
   (state) => state.flightApp.upcomingFlights
@@ -71,26 +74,42 @@ const FlightSlice = createSlice({
   reducers: {
     setSelectedReservation: {
       reducer: (state, action) => {
+        console.log(action.payload);
         state.SelectedReservation = action.payload;
       },
     },
     resetSelectedReservation: (state, action) => {
-      state.searchText = ''; //action.null
+      state.SelectedReservation = ''; //action.null
+    },
+    setNewReservation: {
+      reducer: (state, action) => {
+        state.NewReservation = action.payload;
+      },
+    },
+    resetNewReservation: {
+      reducer: (state, action) => {
+        state.NewReservation = undefined;
+      },
     },
   },
   extraReducers: {
     [getUserReservations.fulfilled]: (state, action) => {
       reservationsAdapter.setAll(state.reseservations, action.payload);
-    }, //console.log(action.payload)
+    },
     [getUpcomingFlights.fulfilled]: (state, action) => {
       upcomingFlightsAdapter.setAll(state.upcomingFlights, action.payload);
-    }, //console.log(action.payload)
+    },
     // [createFeedback.fulfilled]: (state, action) => rezervationsAdapter.addOne,
     // [updateFeedback.fulfilled]: rezervationsAdapter.upsertOne,
     // [removeFeedback.fulfilled]: rezervationsAdapter.removeOne
   },
 });
 
-export const { setSelectedReservation, resetSelectedReservation } = FlightSlice.actions;
+export const {
+  setSelectedReservation,
+  resetSelectedReservation,
+  setNewReservation,
+  resetNewReservation,
+} = FlightSlice.actions;
 
 export default FlightSlice.reducer;
