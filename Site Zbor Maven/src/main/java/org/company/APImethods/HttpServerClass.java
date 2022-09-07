@@ -29,8 +29,6 @@ public class HttpServerClass {
                     LoginService.login(exchange);
                 } catch (ParseException e) {
                     throw new RuntimeException(e);
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
                 }
             } else if ("OPTIONS".equals(exchange.getRequestMethod())) {
                 OPTIONS.optionsMethod(exchange);
@@ -46,9 +44,6 @@ public class HttpServerClass {
                 } catch (ParseException e) {
                     throw new RuntimeException(e);
                 }
-//                catch (SQLException e) {
-//                    throw new RuntimeException(e);
-//                }
             } else if ("OPTIONS".equals(exchange.getRequestMethod())) {
                 OPTIONS.optionsMethod(exchange);
 
@@ -61,9 +56,6 @@ public class HttpServerClass {
                 try {
                     ReservationsService.getReservation(exchange);
                 } catch (ParseException e) {
-                    throw new RuntimeException(e);
-                }
-                catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
             } else if ("OPTIONS".equals(exchange.getRequestMethod())) {
@@ -81,7 +73,20 @@ public class HttpServerClass {
                 } catch (ParseException e) {
                     throw new RuntimeException(e);
                 }
-                catch (SQLException e) {
+            } else if ("OPTIONS".equals(exchange.getRequestMethod())) {
+                OPTIONS.optionsMethod(exchange);
+
+            } else {
+                exchange.sendResponseHeaders(405, -1);// 405 Method Not Allowed
+            }
+        }));
+
+
+        server.createContext("/api/NewReservation", (exchange -> {
+            if ("POST".equals(exchange.getRequestMethod())) {
+                try {
+                    ReservationsService.addReservation(exchange);
+                } catch (ParseException e) {
                     throw new RuntimeException(e);
                 }
             } else if ("OPTIONS".equals(exchange.getRequestMethod())) {

@@ -16,13 +16,18 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public class FlightsService {
-    public static void getUpcomingFlights(HttpExchange exchange) throws SQLException, IOException, ParseException {
+    public static void getUpcomingFlights(HttpExchange exchange) throws IOException, ParseException {
         Map<String,String> queryMap = GET.getRequest(exchange);
         User user = new User(Integer.parseInt(queryMap.get("userId")), queryMap.get("password"));
         User dbUser = DATABASE.getUserById(user);
         boolean userMatch = user.verifyUser(dbUser);
         if (userMatch){
-            ArrayList<Flight> flights = DATABASE.getUpcomingFlights(dbUser);
+            ArrayList<Flight> flights = null;
+            try {
+                flights = DATABASE.getUpcomingFlights(dbUser);
+            } catch (SQLException e) {
+                GET.getResponse(exchange,"CANNOT ACCES DATABASE",200);
+            }
             String fligthsJSONString = flights.toString();
             GET.getResponse(exchange,fligthsJSONString,200);
         }

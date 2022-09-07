@@ -16,11 +16,16 @@ import static org.company.APImethods.POST.postRequest;
 
 public class LoginService {
 
-    public static void login(HttpExchange exchange) throws IOException, ParseException, SQLException {
+    public static void login(HttpExchange exchange) throws IOException, ParseException {
         boolean successfulLogin = false;
         JSONObject jsonObject = postRequest(exchange);
         User user = new Gson().fromJson(jsonObject.toString(), User.class);
-        ArrayList<User> users = DATABASE.getAllUsers();
+        ArrayList<User> users = null;
+        try {
+            users = DATABASE.getAllUsers();
+        } catch (SQLException e) {
+            POST.postResponse(exchange,"USER NOT FOUND",401);
+        }
         for (User userDB:users){
             if((userDB.getEmail().equals(user.getEmail())) && (userDB.getPassword().equals(user.getPassword()))){
                 successfulLogin = true;

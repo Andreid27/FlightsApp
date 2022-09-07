@@ -292,9 +292,7 @@ const SecondarySidebarContent = () => {
             onClick={handleFindFlights}
             color="secondary"
             disabled={
-              flightFilter.departureLocation === null ||
-              flightFilter.landingLocation === null ||
-              isBefore(flightFilter.departureTimestamp, Date().getDate) //DE CONTINUAT LOGICA !!!!!!!!!!!!!!!!!
+              flightFilter.departureLocation === null || flightFilter.landingLocation === null
             }
           >
             Find Flights
