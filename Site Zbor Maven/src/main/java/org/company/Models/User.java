@@ -51,13 +51,17 @@ public class User {
                 ", \"userRole\":\"" + userRole + '\"' +
                 "}";
     }
-
-    public boolean verifyUser(User user){
+    public boolean verifyUserIdAndPassword(User user){
         boolean  verified = false;
         if(this.userId==user.getUserId()&&this.password.equals(user.getPassword()))
         {verified=true;}
         return verified;
     }
-
+    public boolean verifyEmailAndPassword(User user){
+        boolean  verified = false;
+        if(this.email.equals(user.getEmail())&&this.password.equals(user.getPassword()))
+        {verified=true;}
+        return verified;
+    }
 
 }

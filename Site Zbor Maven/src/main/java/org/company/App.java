@@ -9,7 +9,7 @@ import org.company.APImethods.HttpServerClass;
 public class App
 { public static void main( String[] args ) throws IOException, SQLException {
         HttpServerClass.serverStart();
-        DATABASE.startDBconnection();
+//        DATABASE.startDBconnection();
 
     }
 }
