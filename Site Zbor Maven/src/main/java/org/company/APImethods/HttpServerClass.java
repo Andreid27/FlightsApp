@@ -94,6 +94,20 @@ public class HttpServerClass {
                 exchange.sendResponseHeaders(405, -1);// 405 Method Not Allowed
             }
         }));
+        server.createContext("/api/getRouteFlights", (exchange -> {
+            if ("POST".equals(exchange.getRequestMethod())) {
+                try {
+                    FlightsService.getRouteFlights(exchange);
+                } catch (ParseException e) {
+                    throw new RuntimeException(e);
+                }
+            } else if ("OPTIONS".equals(exchange.getRequestMethod())) {
+                OPTIONS.optionsMethod(exchange);
+
+            } else {
+                exchange.sendResponseHeaders(405, -1);// 405 Method Not Allowed
+            }
+        }));
 
 
         server.createContext("/api/NewReservation", (exchange -> {

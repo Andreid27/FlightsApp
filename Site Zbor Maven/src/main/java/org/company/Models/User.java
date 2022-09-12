@@ -1,5 +1,9 @@
 package org.company.Models;
 
+import org.company.Controllers.UserController;
+
+import java.util.Optional;
+
 public class User {
     private String userName;
     private String email;
@@ -62,6 +66,14 @@ public class User {
         if(this.email.equals(user.getEmail())&&this.password.equals(user.getPassword()))
         {verified=true;}
         return verified;
+    }
+
+
+
+    public static boolean DBverifyUserByIdAndPassword(User user){
+        Optional<User> user1 = UserController.getUserById(user);
+        User dbUser = user1.orElseGet(() -> new User(0,null));
+        return user.verifyUserIdAndPassword(dbUser);
     }
 
 }

@@ -2,12 +2,15 @@ package org.company.Services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import org.company.APImethods.GET;
+import org.company.APImethods.POST;
 import org.company.Controllers.FlightController;
 import org.company.Controllers.UserController;
 import org.company.Models.Flight;
 import org.company.Models.User;
+import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
@@ -15,6 +18,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
+
+import static org.company.APImethods.POST.postRequest;
 
 public class FlightsService {
     public static void getUpcomingFlights(HttpExchange exchange) throws IOException, ParseException {
@@ -40,9 +45,7 @@ public class FlightsService {
     public static void getDestinations(HttpExchange exchange) throws IOException, ParseException {
         Map<String,String> queryMap = GET.getRequest(exchange);
         User user = new User(Integer.parseInt(queryMap.get("userId")), queryMap.get("password"));
-        Optional<User> user1 = UserController.getUserById(user);
-        User dbUser = user1.orElseGet(() -> new User(0,null));
-        boolean userMatch = user.verifyUserIdAndPassword(dbUser);
+        boolean userMatch = User.DBverifyUserByIdAndPassword(user);
         Map destinations = null;
         if (userMatch){
             try {
@@ -53,7 +56,7 @@ public class FlightsService {
             ObjectMapper objectMapper = new ObjectMapper();
 
             try {
-                String json = objectMapper.writeValueAsString(destinations);
+                String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(destinations);
                 GET.getResponse(exchange,json,200);
 
             } catch (JsonProcessingException e) {
@@ -62,6 +65,27 @@ public class FlightsService {
         }
         else {GET.getResponse(exchange,"Unauthorized",401);}
     }
+    public static void getRouteFlights(HttpExchange exchange) throws IOException, ParseException {
+        JSONObject jsonObject = postRequest(exchange);
+        User user = new Gson().fromJson(jsonObject.toString(), User.class);
+        Flight flightRoute= new Gson().fromJson(jsonObject.toString(), Flight.class);
+        boolean userMatch = User.DBverifyUserByIdAndPassword(user);
+        ArrayList<Flight> RouteFlights = null;
+        if (userMatch){
+            try {
+                RouteFlights = FlightController.getFlightsByRoute(flightRoute);
+                POST.postResponse(exchange, RouteFlights.toString(), 200);
+            } catch (SQLException e) {
+                POST.postResponse(exchange, "Database connection failed", 200);
+            }
+        }
+        else {
+            POST.postResponse(exchange, "Unauthorized", 401);}
+    }
+
+
+
+
     }
 
 

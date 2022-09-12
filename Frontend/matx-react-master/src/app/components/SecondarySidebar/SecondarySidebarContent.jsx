@@ -31,8 +31,10 @@ import useSettings from 'app/hooks/useSettings';
 import { makeStyles } from '@mui/styles';
 import { useDispatch } from 'react-redux';
 import {
+  getDestinations,
   getUpcomingFlights,
   getUserReservations,
+  selectDestinations,
   selectUpcomingFlightsAdapter,
 } from 'app/redux/reducers/FlightSlice';
 import { LocalizationProvider } from '@mui/x-date-pickers-pro';
@@ -68,10 +70,12 @@ const SecondarySidebarContent = () => {
   };
 
   useEffect(() => {
-    dispatch(getUpcomingFlights());
+    dispatch(getDestinations());
   }, []);
 
   const upcomingFlights = useSelector(selectUpcomingFlightsAdapter);
+  const destinations = useSelector(selectDestinations);
+  // console.log(destinations[0].map((item) => item));
   const [bookNowDisable, setBookNowDisable] = useState(true);
   const bookNowEnable = (en) => {
     // 👇️ take parameter passed from Child component
@@ -165,7 +169,7 @@ const SecondarySidebarContent = () => {
           <div style={{ display: 'flex', justifyContent: 'space-around', p: 0, columnGap: '20px' }}>
             <Autocomplete
               id="combo-box-demo"
-              options={[...new Set(upcomingFlights.map((item) => item.departureLocation))]}
+              options={[...new Set(destinations[0])]}
               style={{
                 width: '45%',
               }}
@@ -202,7 +206,7 @@ const SecondarySidebarContent = () => {
                 width: '45%',
                 color: '#010b1c',
               }}
-              options={[...new Set(upcomingFlights.map((item) => item.landingLocation))]}
+              options={[...new Set(destinations[1])]}
               onChange={(event, value) => {
                 updateFlightFilterState('landingLocation', value);
               }}

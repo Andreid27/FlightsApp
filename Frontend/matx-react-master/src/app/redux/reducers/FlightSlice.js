@@ -38,6 +38,49 @@ export const getUpcomingFlights = createAsyncThunk(
   }
 );
 
+export const getRouteFlights = createAsyncThunk(
+  'flightApp/rezervations/getRouteFlights',
+  async (route) => {
+    const response = await axios.post(apiSpec.LOGIN, {
+      departureLocation: route.departure,
+      landingLocation: route.destination,
+      departureTimestamp: route.departureTimestamp,
+      landingTimestamp: route.landingTimestamp,
+      userId: window.localStorage.getItem('userId'),
+      password: window.localStorage.getItem('password'),
+    });
+    const flights = response.data;
+
+    return flights;
+  }
+);
+
+export const getDestinations = createAsyncThunk(
+  'flightApp/rezervations/getDestinations',
+  async (user) => {
+    const response = await axios.get(apiSpec.DESTIANTIONS, {
+      params: {
+        password: window.localStorage.getItem('password'),
+        userId: window.localStorage.getItem('userId'),
+      },
+    });
+    const data = await response.data;
+    i = 0;
+
+    return data;
+  }
+);
+
+export const addNewReservation = createAsyncThunk(
+  'flightApp/rezervations/addNewReservation',
+  async (NewReservation) => {
+    const response = await axios.post(apiSpec.NEW_RESERVATION, { NewReservation });
+    const data = await response.data;
+
+    return data;
+  }
+);
+
 export const removeFeedback = createAsyncThunk(
   'feedbackApp/feedback/removeFeedback',
   async (feedbackId) => {
@@ -54,8 +97,10 @@ const reservationsAdapter = createEntityAdapter({
 const upcomingFlightsAdapter = createEntityAdapter({
   selectId: (upcomingFlight) => upcomingFlight.id,
 });
-const NewFlightsAdapter = createEntityAdapter({
-  selectId: (NewFlightsAdapter) => NewFlightsAdapter.flightId,
+
+let i = 0;
+const destinationsAdapter = createEntityAdapter({
+  selectId: (destination) => i++,
 });
 
 export const { selectAll: selectUpcomingFlightsAdapter } = upcomingFlightsAdapter.getSelectors(
@@ -64,12 +109,16 @@ export const { selectAll: selectUpcomingFlightsAdapter } = upcomingFlightsAdapte
 export const { selectAll: selectReservations } = reservationsAdapter.getSelectors(
   (state) => state.flightApp.reseservations
 );
+export const { selectAll: selectDestinations } = destinationsAdapter.getSelectors(
+  (state) => state.flightApp.destinations
+);
 
 const FlightSlice = createSlice({
   name: 'flights',
   initialState: {
     reseservations: reservationsAdapter.getInitialState({}),
     upcomingFlights: upcomingFlightsAdapter.getInitialState({}),
+    destinations: destinationsAdapter.getInitialState({}),
   },
   reducers: {
     setSelectedReservation: {
@@ -99,7 +148,10 @@ const FlightSlice = createSlice({
     [getUpcomingFlights.fulfilled]: (state, action) => {
       upcomingFlightsAdapter.setAll(state.upcomingFlights, action.payload);
     },
-    // [createFeedback.fulfilled]: (state, action) => rezervationsAdapter.addOne,
+    [getDestinations.fulfilled]: (state, action) => {
+      destinationsAdapter.setAll(state.destinations, action.payload);
+    },
+    [addNewReservation.fulfilled]: (state, action) => reservationsAdapter.addOne,
     // [updateFeedback.fulfilled]: rezervationsAdapter.upsertOne,
     // [removeFeedback.fulfilled]: rezervationsAdapter.removeOne
   },
