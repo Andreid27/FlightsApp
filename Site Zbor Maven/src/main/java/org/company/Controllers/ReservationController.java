@@ -13,14 +13,15 @@ public class ReservationController {
     public static ArrayList<Reservation> getUserRezervations(User user) throws SQLException {
         ArrayList<Reservation> reservations = new ArrayList<>();
         int userId = user.getUserId();
-        String getUserReservations = "SELECT rezervare.id as rezerare_id,rezervare.locuri,zbor.id as zbor_id,zbor.FlightNumber,zbor.aeronava as aeronava_id,aeronava.Producator,aeronava.Model,aeronava.nr_max_locuri,zbor.Companie,zbor.departure_timestamp,zbor.landing_timestamp, zbor.departure_location,zbor.landing_location FROM rezervari rezervare JOIN users u ON u.id=rezervare.id_user JOIN zboruri zbor ON zbor.id=rezervare.id_zbor JOIN aeronave aeronava ON aeronava.id=zbor.aeronava WHERE u.id="+userId+";";
+        String getUserReservations = "SELECT rezervare.id as rezerare_id,rezervare.locuri,rezervare.pret,zbor.id as zbor_id,zbor.FlightNumber,zbor.aeronava as aeronava_id,aeronava.Producator,aeronava.Model,aeronava.nr_max_locuri,zbor.Companie,zbor.departure_timestamp,zbor.landing_timestamp, zbor.departure_location,zbor.landing_location,zbor.status_CIN FROM rezervari rezervare JOIN users u ON u.id=rezervare.id_user JOIN zboruri zbor ON zbor.id=rezervare.id_zbor JOIN aeronave aeronava ON aeronava.id=zbor.aeronava WHERE u.id="+userId+";";
         DATABASE db = DATABASE.getInstance();
         Connection connection = db.getConnection();
         Statement statement = connection.createStatement();
         try(ResultSet resultSet = statement.executeQuery(getUserReservations)){
             while (resultSet.next()){
                 int rezerare_id = resultSet.getInt("rezerare_id");
-                String lucuri = resultSet.getString("locuri");
+                int locuri = resultSet.getInt("locuri");
+                float pret = resultSet.getInt("pret");
                 int zbor_id = resultSet.getInt("zbor_id");
                 String FlightNumber = resultSet.getString("FlightNumber");
                 int aeronava_id = resultSet.getInt("aeronava_id");
@@ -32,7 +33,8 @@ public class ReservationController {
                 String landing_timestamp = resultSet.getString("landing_timestamp");
                 String departure_location = resultSet.getString("departure_location");
                 String landing_location = resultSet.getString("landing_location");
-                reservations.add(new Reservation(rezerare_id,user,lucuri,new Flight(zbor_id,FlightNumber,Companie,new Airplane(aeronava_id,Producator,Model,nr_max_locuri),departure_timestamp,landing_timestamp,departure_location,landing_location)));
+                String status_CIN = resultSet.getString("status_CIN");
+                reservations.add(new Reservation(rezerare_id,user,locuri,pret,new Flight(zbor_id,FlightNumber,Companie,new Airplane(aeronava_id,Producator,Model,nr_max_locuri),departure_timestamp,landing_timestamp,departure_location,landing_location,status_CIN)));
             }
         }
         return reservations;
@@ -40,8 +42,10 @@ public class ReservationController {
     public static Reservation addReservation(NewReservation newReservation, User user) throws SQLException {
         Reservation dbReservation = null;
         int userId = user.getUserId();
-        String addReservationQuerry="INSERT INTO rezervari VALUES(null,"+userId+","+newReservation.getSeatsNumber()+","+newReservation.getFlightId()+");\n";
-        String getUserReservations = "SELECT rezervare.id as rezerare_id,rezervare.locuri,zbor.id as zbor_id,zbor.FlightNumber,zbor.aeronava as aeronava_id,aeronava.Producator,aeronava.Model,aeronava.nr_max_locuri,zbor.Companie,zbor.departure_timestamp,zbor.landing_timestamp, zbor.departure_location,zbor.landing_location FROM rezervari rezervare JOIN users u ON u.id=rezervare.id_user JOIN zboruri zbor ON zbor.id=rezervare.id_zbor JOIN aeronave aeronava ON aeronava.id=zbor.aeronava WHERE id_user="+userId+" AND locuri="+newReservation.getSeatsNumber()+" AND id_zbor="+newReservation.getFlightId()+";";
+        float price = FlightController.getFlightByIdAndFlightNumber(newReservation.getFlightId(),newReservation.getFlightNumber()).calculatePriceNow();
+        String transaction_number="null";
+        String addReservationQuerry="INSERT INTO rezervari VALUES(null,"+userId+","+newReservation.getSeatsNumber()+","+newReservation.getFlightId()+","+price+","+transaction_number+");\n";
+        String getUserReservations = "SELECT rezervare.id as rezerare_id,rezervare.locuri,rezervare.pret,zbor.id as zbor_id,zbor.FlightNumber,zbor.aeronava as aeronava_id,aeronava.Producator,aeronava.Model,aeronava.nr_max_locuri,zbor.Companie,zbor.departure_timestamp,zbor.landing_timestamp, zbor.departure_location,zbor.landing_location,zbor.status_CIN FROM rezervari rezervare JOIN users u ON u.id=rezervare.id_user JOIN zboruri zbor ON zbor.id=rezervare.id_zbor JOIN aeronave aeronava ON aeronava.id=zbor.aeronava WHERE id_user="+userId+" AND locuri="+newReservation.getSeatsNumber()+" AND id_zbor="+newReservation.getFlightId()+";";
         DATABASE db = DATABASE.getInstance();
         Connection connection = db.getConnection();
         Statement statement = connection.createStatement();
@@ -49,7 +53,8 @@ public class ReservationController {
         try(ResultSet resultSet = statement.executeQuery(getUserReservations)){
             while (resultSet.next()){
                 int rezerare_id = resultSet.getInt("rezerare_id");
-                String lucuri = resultSet.getString("locuri");
+                int locuri = resultSet.getInt("locuri");
+                float pret = resultSet.getInt("pret");
                 int zbor_id = resultSet.getInt("zbor_id");
                 String FlightNumber = resultSet.getString("FlightNumber");
                 int aeronava_id = resultSet.getInt("aeronava_id");
@@ -61,7 +66,8 @@ public class ReservationController {
                 String landing_timestamp = resultSet.getString("landing_timestamp");
                 String departure_location = resultSet.getString("departure_location");
                 String landing_location = resultSet.getString("landing_location");
-                dbReservation = new Reservation(rezerare_id,user,lucuri,new Flight(zbor_id,FlightNumber,Companie,new Airplane(aeronava_id,Producator,Model,nr_max_locuri),departure_timestamp,landing_timestamp,departure_location,landing_location));
+                String status_CIN = resultSet.getString("status_CIN");
+                dbReservation = new Reservation(rezerare_id,user,locuri,pret,new Flight(zbor_id,FlightNumber,Companie,new Airplane(aeronava_id,Producator,Model,nr_max_locuri),departure_timestamp,landing_timestamp,departure_location,landing_location,status_CIN));
             }
         }
         return dbReservation;

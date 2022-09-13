@@ -94,7 +94,7 @@ public class HttpServerClass {
                 exchange.sendResponseHeaders(405, -1);// 405 Method Not Allowed
             }
         }));
-        server.createContext("/api/getRouteFlights", (exchange -> {
+        server.createContext("/api/routeFlights", (exchange -> {
             if ("POST".equals(exchange.getRequestMethod())) {
                 try {
                     FlightsService.getRouteFlights(exchange);

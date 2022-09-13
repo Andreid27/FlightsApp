@@ -31,6 +31,7 @@ import useSettings from 'app/hooks/useSettings';
 import { makeStyles } from '@mui/styles';
 import { useDispatch } from 'react-redux';
 import {
+  addNewReservation,
   getDestinations,
   getUpcomingFlights,
   getUserReservations,
@@ -73,14 +74,19 @@ const SecondarySidebarContent = () => {
     dispatch(getDestinations());
   }, []);
 
-  const upcomingFlights = useSelector(selectUpcomingFlightsAdapter);
   const destinations = useSelector(selectDestinations);
-  // console.log(destinations[0].map((item) => item));
   const [bookNowDisable, setBookNowDisable] = useState(true);
   const bookNowEnable = (en) => {
     // 👇️ take parameter passed from Child component
-    setBookNowDisable(en);
+    setOpen(en);
   };
+
+  const handleBookNow = () => {
+    // setOpen(false);
+    // setFindFilterToggle(false);
+  };
+
+  // const NewReservation = useSelector(({ flightApp }) => flightApp.NewReservation);
 
   const [flightFilter, setFlightFilter] = useState({
     departureLocation: null,
@@ -119,30 +125,7 @@ const SecondarySidebarContent = () => {
           pt: 0,
         }}
       >
-        <CustomDialogTitle sx={{ bgcolor: '#ffffff', color: 'primary.main' }} id="edit-apartment">
-          Available flights
-        </CustomDialogTitle>
-        <CustomDialogContentText sx={{ bgcolor: '#ffffff', color: 'primary.main', pl: 3, pb: 3 }}>
-          {'We found the following flights for you:'}
-        </CustomDialogContentText>
-        <FlightDetailsTable
-          flightFilter={flightFilter}
-          flights={upcomingFlights}
-          bookNowEnable={bookNowEnable}
-        />
-        <DialogActions sx={{ bgcolor: '#ffffff' }}>
-          <Button onClick={handleClose} color="secondary">
-            Cancel
-          </Button>
-          <Button
-            variant="contained"
-            onClick={setFindFilterToggle}
-            color="secondary"
-            disabled={bookNowDisable}
-          >
-            Book Now
-          </Button>
-        </DialogActions>
+        <FlightDetailsTable flightFilter={flightFilter} bookNowEnable={bookNowEnable} />
       </DialogContent>
     </Dialog>
   ) : (

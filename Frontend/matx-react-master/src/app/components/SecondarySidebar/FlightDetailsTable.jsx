@@ -15,32 +15,28 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import _ from 'lodash';
 import { isBefore } from 'date-fns';
-import { TextField } from '@mui/material';
-import { useDispatch } from 'react-redux';
-import { resetNewReservation, setNewReservation } from 'app/redux/reducers/FlightSlice';
+import { Button, DialogActions, DialogContentText, DialogTitle, TextField } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  addNewReservation,
+  getDestinations,
+  getRouteFlights,
+  resetNewReservation,
+  selectUpcomingFlightsAdapter,
+  setNewReservation,
+} from 'app/redux/reducers/FlightSlice';
+import { useEffect } from 'react';
+import styled from '@emotion/styled';
 
-function createData(name, calories, fat, carbs, protein, price) {
-  return {
-    name,
-    calories,
-    fat,
-    carbs,
-    protein,
-    price,
-    history: [
-      {
-        date: '2020-01-05',
-        customerId: '11091700',
-        amount: 3,
-      },
-      {
-        date: '2020-01-02',
-        customerId: 'Anonymous',
-        amount: 1,
-      },
-    ],
-  };
-}
+const CustomDialogTitle = styled(DialogTitle)(({ theme }) => ({
+  paddingTop: '30px',
+  marginBottom: '0px',
+  color: 'black !important',
+}));
+const CustomDialogContentText = styled(DialogContentText)(({ theme }) => ({
+  paddingTop: '0px',
+  color: 'black !important',
+}));
 
 function Row(props) {
   const { row } = props;
@@ -49,12 +45,15 @@ function Row(props) {
   const NewReservation = {
     flightId: row.id,
     flightNumber: row.flightNumber,
-    seatsNuber: nrSeats,
+    seatsNumber: nrSeats,
   };
 
-  if (props.open) {
-    dispatch(setNewReservation(NewReservation));
-  }
+  useEffect(() => {
+    if (props.open) {
+      dispatch(setNewReservation(NewReservation));
+    }
+    props.clickedButton(NewReservation);
+  }, [NewReservation.flightId, NewReservation.seatsNuber]);
 
   return (
     <React.Fragment>
@@ -134,6 +133,13 @@ function Row(props) {
                     ></TextField>
                   </TableCell>
                 </TableBody>
+                <TableRow>
+                  <TableCell align="right" colSpan={7} sx={{ pl: 2 }}>
+                    <Typography variant="subtitle2">
+                      {`Total price for ${nrSeats} passangers is ${nrSeats * row.price} $`}
+                    </Typography>
+                  </TableCell>
+                </TableRow>
               </Table>
             </Box>
           </Collapse>
@@ -146,41 +152,95 @@ function Row(props) {
 export default function FlightDetailsTable(props) {
   const dispatch = useDispatch();
   const [openRow, setOpenRow] = React.useState(null);
+  const [NewReservation, setNewReservation] = React.useState(null);
   if (openRow == '') {
     dispatch(resetNewReservation());
-    props.bookNowEnable(true);
-  }
-  if (typeof openRow == 'number') {
-    props.bookNowEnable(false);
   }
 
-  return (
-    <TableContainer component={Paper}>
-      <Table aria-label="collapsible table">
-        <TableHead>
-          <TableRow>
-            <TableCell />
-            <TableCell colSpan={2}>From</TableCell>
-            <TableCell align="left" colSpan={2}>
-              To
-            </TableCell>
-            <TableCell align="left">Date</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {_.filter(props.flights, function (f) {
-            if (
-              isBefore(props.flightFilter.departureTimestamp, new Date(f.departureTimestamp)) &&
-              f.departureLocation === props.flightFilter.departureLocation &&
-              f.landingLocation === props.flightFilter.landingLocation
-            ) {
-              return f;
-            }
-          }).map((row) => (
-            <Row key={row.id} row={row} open={row.id == openRow} onClick={(id) => setOpenRow(id)} />
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+  const clickedButton = (reservation) => {
+    // 👇️ take parameter passed from Child component
+    setNewReservation(reservation);
+  };
+
+  function handleBookNow(event) {
+    if (typeof openRow === 'number') {
+      dispatch(addNewReservation(NewReservation));
+      props.bookNowEnable(false);
+    }
+  }
+
+  useEffect(() => {
+    dispatch(getRouteFlights(props.flightFilter));
+  }, [props.flightFilter]);
+
+  const RouteFlights = useSelector(selectUpcomingFlightsAdapter);
+
+  return RouteFlights[0] === undefined ? (
+    <Box>
+      <CustomDialogTitle
+        sx={{ bgcolor: '#ffffff', color: 'primary.main' }}
+        id="edit-apartment"
+        component="div"
+        gutterBottom
+      >
+        NO AVAILABLE FLIGHTS
+      </CustomDialogTitle>
+      <CustomDialogContentText sx={{ bgcolor: '#ffffff', color: 'primary.main', pl: 3, pb: 3 }}>
+        We are sorry that there are no available flights at this moment for this flight route.
+      </CustomDialogContentText>
+    </Box>
+  ) : (
+    <>
+      <CustomDialogTitle sx={{ bgcolor: '#ffffff', color: 'primary.main' }} id="edit-apartment">
+        Available flights
+      </CustomDialogTitle>
+      <CustomDialogContentText sx={{ bgcolor: '#ffffff', color: 'primary.main', pl: 3, pb: 3 }}>
+        {'We found the following flights for you:'}
+      </CustomDialogContentText>
+      <TableContainer component={Paper}>
+        <Table aria-label="collapsible table">
+          <TableHead>
+            <TableRow>
+              <TableCell />
+              <TableCell colSpan={2}>From</TableCell>
+              <TableCell align="left" colSpan={2}>
+                To
+              </TableCell>
+              <TableCell align="left">Date</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {_.filter(RouteFlights, function (f) {
+              if (
+                isBefore(props.flightFilter.departureTimestamp, new Date(f.departureTimestamp)) &&
+                f.departureLocation === props.flightFilter.departureLocation &&
+                f.landingLocation === props.flightFilter.landingLocation
+              ) {
+                return f;
+              }
+            }).map((row) => (
+              <Row
+                key={row.id}
+                row={row}
+                open={row.id == openRow}
+                clickedButton={clickedButton}
+                onClick={(id) => setOpenRow(id)}
+              />
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <DialogActions sx={{ bgcolor: '#ffffff' }}>
+        <Button color="secondary">Cancel</Button>
+        <Button
+          variant="contained"
+          onClick={handleBookNow}
+          color="secondary"
+          disabled={typeof openRow != 'number'}
+        >
+          Book Now
+        </Button>
+      </DialogActions>
+    </>
   );
 }

@@ -9,8 +9,10 @@ public class Flight {
     private String landingTimestamp;
     private String departureLocation;
     private String landingLocation;
+    private float price;
+    private String status_CIN;
 
-    public Flight(int id, String flightNumber, String company, Airplane airplane, String departureTimestamp, String landingTimestamp, String departureLocation, String landingLocation) {
+    public Flight(int id, String flightNumber, String company, Airplane airplane, String departureTimestamp, String landingTimestamp, String departureLocation, String landingLocation,float price, String status_CIN) {
         this.id = id;
         this.flightNumber = flightNumber;
         this.company = company;
@@ -19,6 +21,19 @@ public class Flight {
         this.landingTimestamp = landingTimestamp;
         this.departureLocation = departureLocation;
         this.landingLocation = landingLocation;
+        this.price = price;
+        this.status_CIN = status_CIN;
+    }
+    public Flight(int id, String flightNumber, String company, Airplane airplane, String departureTimestamp, String landingTimestamp, String departureLocation, String landingLocation, String status_CIN) {
+        this.id = id;
+        this.flightNumber = flightNumber;
+        this.company = company;
+        this.airplane = airplane;
+        this.departureTimestamp = departureTimestamp;
+        this.landingTimestamp = landingTimestamp;
+        this.departureLocation = departureLocation;
+        this.landingLocation = landingLocation;
+        this.status_CIN = status_CIN;
     }
 
     public int getId() {
@@ -53,6 +68,14 @@ public class Flight {
         return landingLocation;
     }
 
+    public float getPrice() {
+        return price;
+    }
+
+    public String getStatus_CIN() {
+        return status_CIN;
+    }
+
     @Override
     public String toString() {
         return "{\n" +
@@ -64,6 +87,13 @@ public class Flight {
                 ", \n \"landingTimestamp\": \"" + landingTimestamp + "\"" +
                 ", \n \"departureLocation\": \"" + departureLocation + "\"" +
                 ", \n \"landingLocation\": \"" + landingLocation + "\"" +
+                ", \n \"price\": \"" + price + "\"" +
+                ", \n \"status_CIN\": \"" + status_CIN + "\"" +
                 "}";
     }
+
+    public float calculatePriceNow(){
+        return (float) (this.price*0.9);
+    }
+
 }

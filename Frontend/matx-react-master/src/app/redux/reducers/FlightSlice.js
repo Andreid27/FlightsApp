@@ -8,6 +8,7 @@ import axios from 'axios';
 import * as apiSpec from './../../../fake-db/apiSpec';
 import { useDispatch } from 'react';
 import { element } from 'prop-types';
+import { useSelector } from 'react-redux';
 
 export const getUserReservations = createAsyncThunk(
   'flightApp/rezervations/getUserFlights',
@@ -41,11 +42,9 @@ export const getUpcomingFlights = createAsyncThunk(
 export const getRouteFlights = createAsyncThunk(
   'flightApp/rezervations/getRouteFlights',
   async (route) => {
-    const response = await axios.post(apiSpec.LOGIN, {
-      departureLocation: route.departure,
-      landingLocation: route.destination,
-      departureTimestamp: route.departureTimestamp,
-      landingTimestamp: route.landingTimestamp,
+    const response = await axios.post(apiSpec.ROUTE_FLIGHTS, {
+      departureLocation: route.departureLocation,
+      landingLocation: route.landingLocation,
       userId: window.localStorage.getItem('userId'),
       password: window.localStorage.getItem('password'),
     });
@@ -74,7 +73,14 @@ export const getDestinations = createAsyncThunk(
 export const addNewReservation = createAsyncThunk(
   'flightApp/rezervations/addNewReservation',
   async (NewReservation) => {
-    const response = await axios.post(apiSpec.NEW_RESERVATION, { NewReservation });
+    const response = await axios.post(apiSpec.NEW_RESERVATION, {
+      userId: window.localStorage.getItem('userId'),
+      password: window.localStorage.getItem('password'),
+      flightId: NewReservation.flightId,
+      seatsNumber: NewReservation.seatsNumber,
+      flightNumber: NewReservation.flightNumber,
+    });
+    console.log(NewReservation);
     const data = await response.data;
 
     return data;
@@ -123,7 +129,6 @@ const FlightSlice = createSlice({
   reducers: {
     setSelectedReservation: {
       reducer: (state, action) => {
-        console.log(action.payload);
         state.SelectedReservation = action.payload;
       },
     },
@@ -146,6 +151,9 @@ const FlightSlice = createSlice({
       reservationsAdapter.setAll(state.reseservations, action.payload);
     },
     [getUpcomingFlights.fulfilled]: (state, action) => {
+      upcomingFlightsAdapter.setAll(state.upcomingFlights, action.payload);
+    },
+    [getRouteFlights.fulfilled]: (state, action) => {
       upcomingFlightsAdapter.setAll(state.upcomingFlights, action.payload);
     },
     [getDestinations.fulfilled]: (state, action) => {
