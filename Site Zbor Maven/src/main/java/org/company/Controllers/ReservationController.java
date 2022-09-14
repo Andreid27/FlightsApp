@@ -42,7 +42,9 @@ public class ReservationController {
     public static Reservation addReservation(NewReservation newReservation, User user) throws SQLException {
         Reservation dbReservation = null;
         int userId = user.getUserId();
-        float price = FlightController.getFlightByIdAndFlightNumber(newReservation.getFlightId(),newReservation.getFlightNumber()).calculatePriceNow();
+        Flight DBflight = FlightController.getFlightByIdAndFlightNumber(newReservation.getFlightId(),newReservation.getFlightNumber());
+        DBflight.calculatePriceNow();
+        double price = DBflight.getPrice();
         String transaction_number="null";
         String addReservationQuerry="INSERT INTO rezervari VALUES(null,"+userId+","+newReservation.getSeatsNumber()+","+newReservation.getFlightId()+","+price+","+transaction_number+");\n";
         String getUserReservations = "SELECT rezervare.id as rezerare_id,rezervare.locuri,rezervare.pret,zbor.id as zbor_id,zbor.FlightNumber,zbor.aeronava as aeronava_id,aeronava.Producator,aeronava.Model,aeronava.nr_max_locuri,zbor.Companie,zbor.departure_timestamp,zbor.landing_timestamp, zbor.departure_location,zbor.landing_location,zbor.status_CIN FROM rezervari rezervare JOIN users u ON u.id=rezervare.id_user JOIN zboruri zbor ON zbor.id=rezervare.id_zbor JOIN aeronave aeronava ON aeronava.id=zbor.aeronava WHERE id_user="+userId+" AND locuri="+newReservation.getSeatsNumber()+" AND id_zbor="+newReservation.getFlightId()+";";

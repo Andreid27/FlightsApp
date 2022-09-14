@@ -113,7 +113,9 @@ public class FlightController {
                 String landing_location = resultSet.getString("landing_location");
                 int price = resultSet.getInt("pret");
                 String status_CIN = resultSet.getString("status_CIN");
-                RouteFlights.add(new Flight(zbor_id,FlightNumber,Companie,new Airplane(aeronava_id,Producator,Model,nr_max_locuri),departure_timestamp,landing_timestamp,departure_location,landing_location,price,status_CIN));
+                Flight flightToAdd = new Flight(zbor_id,FlightNumber,Companie,new Airplane(aeronava_id,Producator,Model,nr_max_locuri),departure_timestamp,landing_timestamp,departure_location,landing_location,price,status_CIN);
+                flightToAdd.calculatePriceNow();
+                RouteFlights.add(flightToAdd);
             }
         }
         return RouteFlights;
