@@ -130,7 +130,7 @@ public class FlightController {
         String getRoute =  "SELECT\n" +
                 "  zbor.id as zbor_id,zbor.FlightNumber,\n" +
                 "  zbor.aeronava as aeronava_id,aeronava.Producator, aeronava.Model,aeronava.nr_max_locuri,\n" +
-                "  zbor.Companie,zbor.departure_timestamp,zbor.landing_timestamp, zbor.departure_location,zbor.landing_location,zbor.pret,zbor.status_CIN\n" +
+                "  zbor.Companie,zbor.departure_timestamp,zbor.landing_timestamp, zbor.departure_location,zbor.landing_location,zbor.pret,zbor.status_CIN,zbor.promo_options,zbor.passangers\n" +
                 "FROM zboruri zbor \n" +
                 "JOIN aeronave aeronava\n" +
                 "    ON aeronava.id=zbor.aeronava " +
