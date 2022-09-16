@@ -57,6 +57,9 @@ CREATE TABLE zboruri(
     landing_location varchar(50),
     issued_by int NOT NULL,
     pret float NOT NULL,
+    status_CIN enum("closed","open") DEFAULT "closed",
+    promo_options tinyint(2),
+    passangers smallint(4) DEFAULT 0,
     primary key(id),
 	FOREIGN KEY(aeronava) REFERENCES aeronave(id),
     FOREIGN KEY(issued_by) REFERENCES Users(id)
@@ -64,6 +67,10 @@ CREATE TABLE zboruri(
 
 ALTER TABLE zboruri
 ADD column status_CIN enum("closed","open") DEFAULT "closed";
+ALTER TABLE zboruri
+ADD COLUMN passangers smallint(4) DEFAULT 0;
+ALTER TABLE zboruri
+DROP COLUMN passangers;
 
 
 SELECT departure_location FROM zboruri
@@ -86,7 +93,7 @@ select * from zboruri;
 
 
 INSERT INTO zboruri VALUES
-(null,"Y54168","Lufthansa",3,"2022-11-12 17:55:00","2022-12-20 23:38:00","Londra(LDA)","Lisabona(LSB)",1);
+(null,"H762931","WizzAir",2,"2022-09-24 17:55:00","2022-12-20 23:38:00","Milano(MLA)","Berlin(BRL)",2,100,"closed");
 
 SELECT
   zbor.id as zbor_id,zbor.FlightNumber,
@@ -117,13 +124,19 @@ ADD COLUMN transaction_number varchar(20) DEFAULT null;
 
 
 INSERT INTO rezervari VALUES
-(null,2,"01B",5);
+(null,5,4,5,92,'ds12w3892');
 
 select * from rezervari;
 select * from rezervari
 WHERE id_user=2 AND locuri=16 AND id_zbor=1;
+SELECT SUM(locuri) FROM rezervari WHERE id_zbor=8; -- NR LOCURI IN FUNCTIE DE ZBOR
 
-
+DELIMITER //
+CREATE TRIGGER update_reservation_number AFTER INSERT ON rezervari FOR EACH ROW
+BEGIN
+	UPDATE `flightsapp`.`zboruri` SET passangers = passangers+NEW.locuri WHERE (`id` = '5');
+END
+//
 
 CREATE TABLE persoane_CIN(
 	id int NOT NULL auto_increment,

@@ -90,7 +90,7 @@ public class FlightController {
         String getRoute =  "SELECT\n" +
                 "  zbor.id as zbor_id,zbor.FlightNumber,\n" +
                 "  zbor.aeronava as aeronava_id,aeronava.Producator, aeronava.Model,aeronava.nr_max_locuri,\n" +
-                "  zbor.Companie,zbor.departure_timestamp,zbor.landing_timestamp, zbor.departure_location,zbor.landing_location,zbor.pret,zbor.status_CIN\n" +
+                "  zbor.Companie,zbor.departure_timestamp,zbor.landing_timestamp, zbor.departure_location,zbor.landing_location,zbor.pret,zbor.status_CIN,zbor.promo_options,zbor.passangers\n" +
                 "FROM zboruri zbor \n" +
                 "JOIN aeronave aeronava\n" +
                 "    ON aeronava.id=zbor.aeronava " +
@@ -111,10 +111,12 @@ public class FlightController {
                 String landing_timestamp = resultSet.getString("landing_timestamp");
                 String departure_location = resultSet.getString("departure_location");
                 String landing_location = resultSet.getString("landing_location");
-                int price = resultSet.getInt("pret");
+                float price = resultSet.getFloat("pret");
                 String status_CIN = resultSet.getString("status_CIN");
+                short promo_options = resultSet.getShort("promo_options");
+                short passangers = resultSet.getShort("passangers");
                 Flight flightToAdd = new Flight(zbor_id,FlightNumber,Companie,new Airplane(aeronava_id,Producator,Model,nr_max_locuri),departure_timestamp,landing_timestamp,departure_location,landing_location,price,status_CIN);
-                flightToAdd.calculatePriceNow();
+                flightToAdd.calculatePriceNow(promo_options,passangers);
                 RouteFlights.add(flightToAdd);
             }
         }
@@ -151,10 +153,28 @@ public class FlightController {
                 String landing_location = resultSet.getString("landing_location");
                 int price = resultSet.getInt("pret");
                 String status_CIN = resultSet.getString("status_CIN");
+                short promo_options = resultSet.getShort("promo_options");
+                short passangers = resultSet.getShort("passangers");
                 flightDB =new Flight(zbor_id,FlightNumber,Companie,new Airplane(aeronava_id,Producator,Model,nr_max_locuri),departure_timestamp,landing_timestamp,departure_location,landing_location,price,status_CIN);
+                flightDB.calculatePriceNow(promo_options,passangers);
             }
         }
         return flightDB;
+    }
+
+
+    public static short getPassangersNoByFlightId(int id) throws SQLException {
+        short passangersNumber = 0;
+        String getRoute =  "SELECT SUM(locuri) FROM rezervari WHERE id_zbor="+id+";\n";
+        DATABASE db = DATABASE.getInstance();
+        Connection connection = db.getConnection();
+        Statement statement = connection.createStatement();
+        try(ResultSet resultSet = statement.executeQuery(getRoute)){
+            while (resultSet.next()){
+                passangersNumber = resultSet.getShort("zbor_id");
+            }
+        }
+        return passangersNumber;
     }
 
 

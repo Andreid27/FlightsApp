@@ -43,7 +43,6 @@ public class ReservationController {
         Reservation dbReservation = null;
         int userId = user.getUserId();
         Flight DBflight = FlightController.getFlightByIdAndFlightNumber(newReservation.getFlightId(),newReservation.getFlightNumber());
-        DBflight.calculatePriceNow();
         double price = DBflight.getPrice();
         String transaction_number="null";
         String addReservationQuerry="INSERT INTO rezervari VALUES(null,"+userId+","+newReservation.getSeatsNumber()+","+newReservation.getFlightId()+","+price+","+transaction_number+");\n";
