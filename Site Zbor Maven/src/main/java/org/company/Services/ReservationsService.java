@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public class ReservationsService {
-    public static void getReservation(HttpExchange exchange) throws IOException, ParseException {
+    public static void getReservationsByUserIdAndPassword(HttpExchange exchange) throws IOException, ParseException {
         Map<String,String> queryMap = GET.getRequest(exchange);
         User user = new User(Integer.parseInt(queryMap.get("userId")), queryMap.get("password"));
         Optional<User> user1 = UserController.getUserById(user);
@@ -41,7 +41,6 @@ public class ReservationsService {
 
 
     public static void addReservation(HttpExchange exchange) throws IOException, ParseException {
-        boolean successfulLogin = false;
         JSONObject jsonObject = POST.postRequest(exchange);
         User user = new Gson().fromJson(jsonObject.toString(), User.class);
         NewReservation newReservation = new Gson().fromJson(jsonObject.toString(), NewReservation.class);
@@ -61,4 +60,10 @@ public class ReservationsService {
         }
         else {POST.postResponse(exchange,"Unauthorized",401);}
     }
+
+
+
+
+
+
 }

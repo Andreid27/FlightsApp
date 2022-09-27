@@ -1,22 +1,12 @@
 package org.company.APImethods;
 
-import com.sun.net.httpserver.Authenticator;
-import com.sun.net.httpserver.BasicAuthenticator;
-import org.apache.http.protocol.HttpContext;
-import org.company.Services.FlightsService;
-import org.company.Services.LoginService;
-import org.company.Services.RegisterService;
-import org.company.Services.ReservationsService;
+import org.company.Services.*;
 import org.json.simple.parser.ParseException;
 
-import java.awt.*;
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.sql.SQLException;
-import java.util.Map;
 
 //import static org.company.APImethods.GET.getMethod;
-import static org.company.APImethods.POST.postRequest;
 
 
 public class HttpServerClass {
@@ -54,7 +44,7 @@ public class HttpServerClass {
         server.createContext("/api/rezervations", (exchange -> {
             if ("GET".equals(exchange.getRequestMethod())) {
                 try {
-                    ReservationsService.getReservation(exchange);
+                    ReservationsService.getReservationsByUserIdAndPassword(exchange);
                 } catch (ParseException e) {
                     throw new RuntimeException(e);
                 }
@@ -114,6 +104,20 @@ public class HttpServerClass {
             if ("POST".equals(exchange.getRequestMethod())) {
                 try {
                     ReservationsService.addReservation(exchange);
+                } catch (ParseException e) {
+                    throw new RuntimeException(e);
+                }
+            } else if ("OPTIONS".equals(exchange.getRequestMethod())) {
+                OPTIONS.optionsMethod(exchange);
+
+            } else {
+                exchange.sendResponseHeaders(405, -1);// 405 Method Not Allowed
+            }
+        }));
+        server.createContext("/api/CheckIn", (exchange -> {
+            if ("POST".equals(exchange.getRequestMethod())) {
+                try {
+                    CheckInService.makeCheckIn(exchange);
                 } catch (ParseException e) {
                     throw new RuntimeException(e);
                 }

@@ -346,4 +346,3 @@ BEGIN
         DELETE FROM rezervari WHERE id_zbor IN ( SELECT id from zboruri WHERE landing_timestamp<CURDATE()) ;
 END
 //
-    
