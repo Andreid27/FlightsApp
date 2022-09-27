@@ -122,7 +122,7 @@ export const { selectAll: selectDestinations } = destinationsAdapter.getSelector
 const FlightSlice = createSlice({
   name: 'flights',
   initialState: {
-    reseservations: reservationsAdapter.getInitialState({}),
+    reseservations: reservationsAdapter.getInitialState(),
     upcomingFlights: upcomingFlightsAdapter.getInitialState({}),
     destinations: destinationsAdapter.getInitialState({}),
   },
@@ -159,7 +159,10 @@ const FlightSlice = createSlice({
     [getDestinations.fulfilled]: (state, action) => {
       destinationsAdapter.setAll(state.destinations, action.payload);
     },
-    [addNewReservation.fulfilled]: (state, action) => reservationsAdapter.addOne,
+    [addNewReservation.fulfilled]: (state, action) => {
+      reservationsAdapter.addOne(state.reseservations, action.payload);
+    },
+
     // [updateFeedback.fulfilled]: rezervationsAdapter.upsertOne,
     // [removeFeedback.fulfilled]: rezervationsAdapter.removeOne
   },

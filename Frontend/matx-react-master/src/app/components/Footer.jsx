@@ -42,7 +42,10 @@ const Footer = () => {
           <FooterContent>
             <Span sx={{ m: 'auto' }}></Span>
             <Paragraph sx={{ m: 0 }}>
-            Prototype Developed by <a href="http://ui-lib.com">Andrei Dinca</a>
+              Prototype Developed by{' '}
+              <a href="http://dinca.one" target="_blank">
+                Andrei Dinca
+              </a>
             </Paragraph>
           </FooterContent>
         </AppFooter>

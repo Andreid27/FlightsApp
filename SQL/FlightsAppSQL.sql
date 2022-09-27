@@ -157,6 +157,11 @@ select * from persoane_CIN;
 
 
 
+INSERT INTO persoane_CIN VALUES 
+(null, 'Gicu','Marian','13A',17),
+(null, 'Gica','Marian','13B',17);
+
+
 
 -- LISTA TOATE REZERVARILE COMPLETE sau CU WHERE CU ID USER PT REZERVARILE UNUI UTILIZATOR;
 SELECT
@@ -336,6 +341,8 @@ BEGIN
         END LOOP zboruri;
         CLOSE cursor_zboruri_trecut;
         
+         
+        DELETE FROM persoane_cin WHERE id_rezervare IN ( SELECT id FROM rezervari WHERE id_zbor IN ( SELECT id from zboruri WHERE landing_timestamp<CURDATE()));
         DELETE FROM rezervari WHERE id_zbor IN ( SELECT id from zboruri WHERE landing_timestamp<CURDATE()) ;
 END
 //

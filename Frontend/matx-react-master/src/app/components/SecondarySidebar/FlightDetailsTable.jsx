@@ -53,7 +53,7 @@ function Row(props) {
       dispatch(setNewReservation(NewReservation));
     }
     props.clickedButton(NewReservation);
-  }, [NewReservation.flightId, NewReservation.seatsNuber]);
+  }, [NewReservation.flightId, NewReservation.seatsNumber]);
 
   return (
     <React.Fragment>
