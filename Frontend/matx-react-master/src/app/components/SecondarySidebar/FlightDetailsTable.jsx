@@ -168,6 +168,9 @@ export default function FlightDetailsTable(props) {
       props.bookNowEnable(false);
     }
   }
+  function handleClose(event) {
+    props.bookNowEnable(false);
+  }
 
   useEffect(() => {
     dispatch(getRouteFlights(props.flightFilter));
@@ -231,7 +234,9 @@ export default function FlightDetailsTable(props) {
         </Table>
       </TableContainer>
       <DialogActions sx={{ bgcolor: '#ffffff' }}>
-        <Button color="secondary">Cancel</Button>
+        <Button color="secondary" onClick={handleClose}>
+          Cancel
+        </Button>
         <Button
           variant="contained"
           onClick={handleBookNow}

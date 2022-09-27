@@ -80,7 +80,6 @@ export const addNewReservation = createAsyncThunk(
       seatsNumber: NewReservation.seatsNumber,
       flightNumber: NewReservation.flightNumber,
     });
-    console.log(NewReservation);
     const data = await response.data;
 
     return data;

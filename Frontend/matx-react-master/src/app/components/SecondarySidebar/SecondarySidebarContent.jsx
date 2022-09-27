@@ -79,14 +79,8 @@ const SecondarySidebarContent = () => {
   const bookNowEnable = (en) => {
     // 👇️ take parameter passed from Child component
     setOpen(en);
+    toggle();
   };
-
-  const handleBookNow = () => {
-    // setOpen(false);
-    // setFindFilterToggle(false);
-  };
-
-  // const NewReservation = useSelector(({ flightApp }) => flightApp.NewReservation);
 
   const [flightFilter, setFlightFilter] = useState({
     departureLocation: null,
