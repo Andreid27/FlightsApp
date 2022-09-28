@@ -143,11 +143,12 @@ CREATE TABLE persoane_CIN(
     nume varchar(30) NOT NULL,
     prenume varchar(30) NOT NULL,
     loc varchar(5),
+    identification_number varchar(20) NOT NULL
     primary key(id)
 );
 
 ALTER TABLE persoane_CIN
-ADD COLUMN id_rezervare int NOT NULL;
+ADD COLUMN identification_number varchar(20) NOT NULL;
 
 
 ALTER TABLE persoane_CIN
@@ -342,7 +343,63 @@ BEGIN
         CLOSE cursor_zboruri_trecut;
         
          
-        DELETE FROM persoane_cin WHERE id_rezervare IN ( SELECT id FROM rezervari WHERE id_zbor IN ( SELECT id from zboruri WHERE landing_timestamp<CURDATE()));
-        DELETE FROM rezervari WHERE id_zbor IN ( SELECT id from zboruri WHERE landing_timestamp<CURDATE()) ;
+DELETE FROM persoane_cin 
+WHERE
+    id_rezervare IN (SELECT 
+        id
+    FROM
+        rezervari
+    
+    WHERE
+        id_zbor IN (SELECT 
+            id
+        FROM
+            zboruri
+        
+        WHERE
+            landing_timestamp < CURDATE()));
+DELETE FROM rezervari 
+WHERE
+    id_zbor IN (SELECT 
+        id
+    FROM
+        zboruri
+    
+    WHERE
+        landing_timestamp < CURDATE());
 END
 //
+
+
+
+
+
+
+
+
+
+
+
+SELECT rezervare.locuri,rezervare.id_user,aeronava.nr_max_locuri
+ FROM rezervari rezervare 
+ JOIN zboruri zbor
+  ON zbor.id=rezervare.id_zbor
+JOIN aeronave aeronava
+    ON aeronava.id=zbor.aeronava 
+WHERE rezervare.id=37;
+
+
+
+
+
+SELECT rezervare.locuri,rezervare.id_user,aeronava.nr_max_locuri
+ FROM rezervari rezervare 
+ JOIN zboruri zbor
+  ON zbor.id=rezervare.id_zbor
+JOIN aeronave aeronava
+    ON aeronava.id=zbor.aeronava 
+WHERE rezervare.id=37;
+
+
+
+
