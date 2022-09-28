@@ -24,22 +24,29 @@ public class CheckInService {
     public static void makeCheckIn(HttpExchange exchange) throws IOException, ParseException {
         JSONObject jsonObject = POST.postRequest(exchange);
         User user = new Gson().fromJson(jsonObject.toString(), User.class);
-        Reservation reservationFromJson = new Gson().fromJson(jsonObject.toString(), Reservation.class);
+        CheckIn checkIn = new Gson().fromJson(jsonObject.toString(), CheckIn.class);
         Optional<User> user1 = UserController.getUserById(user);
         User dbUser = user1.orElseGet(() -> new User(0,null));
         boolean userMatch = user.verifyUserIdAndPassword(dbUser);
         if (userMatch){
-            Reservation addedReservation = null;
             try {
-                CheckIn checkIn = CheckInControler.getRezervationByIdSeats(reservationFromJson.getId(),dbUser.getUserId());
+                checkIn = CheckInControler.getRezervationByIdSeats(checkIn,dbUser.getUserId());
                 checkIn.generateSeatNumber();
-                POST.postResponse(exchange,"AM AJUNS AICI",200);
+                if(checkIn.getPassengers().size()== checkIn.getSeatsToGenerate()){
+                    if(CheckInControler.addCinDB(checkIn)){
+                    POST.postResponse(exchange,"SUCCES",200);
+                    }
+                    else {
+                        POST.postResponse(exchange,"DATABASE ERROR",200);
+                    }
+                }
+
             } catch (SQLException e) {
                 System.out.println(e);
                 POST.postResponse(exchange,"USER NOT FOUND",401);
             }
-            String rezervationsJSONString = addedReservation.toString();
-            POST.postResponse(exchange,rezervationsJSONString,200);
+//            String rezervationsJSONString = addedReservation.toString();
+//            POST.postResponse(exchange,rezervationsJSONString,200);
         }
         else {POST.postResponse(exchange,"Unauthorized",401);}
     }

@@ -1,19 +1,27 @@
 package org.company.Models;
 
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Random;
 
 public class CheckIn {
     private int seatsToGenerate;
-    private ArrayList<String> usedSeats;
+    private HashSet<String> usedSeats;
     private int max_airplane_seats;
-    private ArrayList<String> generatedSeats;
+    private HashSet<String> generatedSeats = new HashSet<>();
     private short rows;
+    private HashSet<Passenger> passengers;
+    int reservationId;
 
-    public CheckIn(int seatsToGenerate, ArrayList<String> usedSeats, int max_airplane_seats) {
+
+    public CheckIn(int seatsToGenerate, HashSet<String> usedSeats, int max_airplane_seats,HashSet<Passenger> passengers,int reservationId) {
         this.seatsToGenerate = seatsToGenerate;
         this.usedSeats = usedSeats;
         this.max_airplane_seats = max_airplane_seats;
+        this.passengers = passengers;
+        this.reservationId = reservationId;
         this.rows = (short) (max_airplane_seats/6);
     }
 
@@ -21,7 +29,7 @@ public class CheckIn {
         return seatsToGenerate;
     }
 
-    public ArrayList<String> getUsedSeats() {
+    public HashSet<String> getUsedSeats() {
         return usedSeats;
     }
 
@@ -33,31 +41,290 @@ public class CheckIn {
         return rows;
     }
 
-    public ArrayList<String> getGeneratedSeats() {
+    public HashSet<String> getGeneratedSeats() {
         return generatedSeats;
     }
 
-    public void setGeneratedSeats(ArrayList<String> generatedSeats) {
-        this.generatedSeats = generatedSeats;
+    public HashSet<Passenger> getPassengers() {
+        return passengers;
     }
 
-
+    public int getReservationId() {
+        return reservationId;
+    }
 
     public void generateSeatNumber(){
         boolean alreadyUsed = true;
         String firstSeat = new String();
         while(alreadyUsed) {
             firstSeat = generateFirstSeat();
-            String finalFirstSeat = firstSeat;
-            alreadyUsed = usedSeats.stream()
-                    .anyMatch(usedSeat -> usedSeat.equals(finalFirstSeat));
-            System.out.println(firstSeat);
+            alreadyUsed = usedSeats.contains(firstSeat);
         }
         generatedSeats.add(firstSeat);
+        short rowNr = 0;
+        char character = firstSeat.charAt(firstSeat.length() - 1);
+        try {
+            rowNr = (short) NumberFormat.getInstance().parse(firstSeat).intValue();
+        } catch (ParseException e) {
+            System.out.println("Cannot parse INT value of firstSeat");;
+        }
+        for(short i=2; i<=seatsToGenerate;i++) {
+            alreadyUsed = true;
+            short tryAtempt = 0;
+            String nextSeat = new String();
+            while (alreadyUsed) {
+                switch (tryAtempt) {
+                    case (0): {
+                        if (Character.compare(character, 'C') <= 0 && Character.compare(character, 'A') > 0) {
+                            char characterCopy = (char) (character-1);
+                            nextSeat= String.valueOf(rowNr)+characterCopy;
+                        }
+                        else if (Character.compare(character, 'F') < 0){
+                            char characterCopy = (char) (character+1);
+                            nextSeat= String.valueOf(rowNr)+characterCopy;
+                        }
+                        else {
+                            char characterCopy = (char) (character-1);
+                            nextSeat= String.valueOf(rowNr)+characterCopy;
+                        }
+                        break;
+                    }
+                    case (1):{
+                        if (Character.compare(character, 'C') <= 0 && Character.compare(character, 'B') > 0) {
+                            char characterCopy = (char) (character-2);
+                            nextSeat= String.valueOf(rowNr)+characterCopy;
+                        }
+                        else if (Character.compare(character, 'E') < 0){
+                            char characterCopy = (char) (character+2);
+                            nextSeat= String.valueOf(rowNr)+characterCopy;
+                        }
+                        else {
+                            char characterCopy = (char) (character-2);
+                            nextSeat= String.valueOf(rowNr)+characterCopy;
+                        }
+                        break;
+                    }
+                    case (2):{
+                        if (Character.compare(character, 'C') <= 0) { // daca <c -> du-te o pozitie in dreapta
+                            char characterCopy = (char) (character+1);
+                            nextSeat= String.valueOf(rowNr)+characterCopy;
+                        }
+                        else if (Character.compare(character, 'F') <= 0){ //DACA char<F -> du-te o pozitie in stanga
+                            char characterCopy = (char) (character-1);
+                            nextSeat= String.valueOf(rowNr)+characterCopy;
+                        }
+                        break;
+                    }
+                    case (3):{
+                        if (Character.compare(character, 'C') <= 0) { // daca <c -> du-te o pozitie in dreapta
+                            char characterCopy = (char) (character+2);
+                            nextSeat= String.valueOf(rowNr)+characterCopy;
+                        }
+                        else if (Character.compare(character, 'F') <= 0){ //DACA char<F -> du-te o pozitie in stanga
+                            char characterCopy = (char) (character-2);
+                            nextSeat= String.valueOf(rowNr)+characterCopy;
+                        }
+                        break;
+                    }
+                    case (4):{
+                        if (Character.compare(character, 'C') <= 0) { // daca <c -> du-te o pozitie in dreapta
+                            char characterCopy = (char) (character+3);
+                            nextSeat= String.valueOf(rowNr)+characterCopy;
+                        }
+                        else if (Character.compare(character, 'F') <= 0){ //DACA char<F -> du-te o pozitie in stanga
+                            char characterCopy = (char) (character-3);
+                            nextSeat= String.valueOf(rowNr)+characterCopy;
+                        }
+                        break;
+                    }
+                    case (5):{
+                        short rowCopy = 0;
+                        if (rowNr<rows){
+                         rowCopy = (short) (rowNr+1);
+                        }
+                        nextSeat= String.valueOf(rowCopy)+character;
+                    }
+                    case (6):{
+                        short rowCopy = 0;
+                        if (rowNr>1){
+                         rowCopy = (short) (rowNr-1);
+                        }
+                        nextSeat= String.valueOf(rowCopy)+character;
+                    }
+                    case (7):{
+                        short rowCopy = 0;
+                        if (rowNr>1){
+                         rowCopy = (short) (rowNr-1);
+                        }
+                        if (Character.compare(character, 'C') <= 0 && Character.compare(character, 'A') > 0) {
+                            char characterCopy = (char) (character-1);
+                            nextSeat= String.valueOf(rowCopy)+characterCopy;
+                        }
+                        else if (Character.compare(character, 'F') < 0){
+                            char characterCopy = (char) (character+1);
+                            nextSeat= String.valueOf(rowCopy)+characterCopy;
+                        }
+                        else {
+                            char characterCopy = (char) (character-1);
+                            nextSeat= String.valueOf(rowCopy)+characterCopy;
+                        }
+                        break;
+                    }
+                    case (8):{
+                        short rowCopy = 0;
+                        if (rowNr>1){
+                         rowCopy = (short) (rowNr-1);
+                        }
+                            if (Character.compare(character, 'C') <= 0 && Character.compare(character, 'B') > 0) {
+                                char characterCopy = (char) (character-2);
+                                nextSeat= String.valueOf(rowCopy)+characterCopy;
+                            }
+                            else if (Character.compare(character, 'E') < 0){
+                                char characterCopy = (char) (character+2);
+                                nextSeat= String.valueOf(rowCopy)+characterCopy;
+                            }
+                            else {
+                                char characterCopy = (char) (character-2);
+                                nextSeat= String.valueOf(rowCopy)+characterCopy;
+                            }
+                            break;
+                        }
+                        case (9):{
+                        short rowCopy = 0;
+                        if (rowNr>1){
+                         rowCopy = (short) (rowNr-1);
+                        }
+                            if (Character.compare(character, 'C') <= 0) { // daca <c -> du-te o pozitie in dreapta
+                                char characterCopy = (char) (character+1);
+                                nextSeat= String.valueOf(rowCopy)+characterCopy;
+                            }
+                            else if (Character.compare(character, 'F') <= 0){ //DACA char<F -> du-te o pozitie in stanga
+                                char characterCopy = (char) (character-1);
+                                nextSeat= String.valueOf(rowCopy)+characterCopy;
+                            }
+                            break;
+                        }
+                        case (10):{
+                        short rowCopy = 0;
+                        if (rowNr>1){
+                         rowCopy = (short) (rowNr-1);
+                        }
+                            if (Character.compare(character, 'C') <= 0) { // daca <c -> du-te o pozitie in dreapta
+                                char characterCopy = (char) (character+2);
+                                nextSeat= String.valueOf(rowCopy)+characterCopy;
+                            }
+                            else if (Character.compare(character, 'F') <= 0){ //DACA char<F -> du-te o pozitie in stanga
+                                char characterCopy = (char) (character-2);
+                                nextSeat= String.valueOf(rowCopy)+characterCopy;
+                            }
+                            break;
+                        }
+                        case (11):{
+                        short rowCopy = 0;
+                        if (rowNr>1){
+                         rowCopy = (short) (rowNr-1);
+                        }
+                            if (Character.compare(character, 'C') <= 0) { // daca <c -> du-te o pozitie in dreapta
+                                char characterCopy = (char) (character+3);
+                                nextSeat= String.valueOf(rowCopy)+characterCopy;
+                            }
+                            else if (Character.compare(character, 'F') <= 0){ //DACA char<F -> du-te o pozitie in stanga
+                                char characterCopy = (char) (character-3);
+                                nextSeat= String.valueOf(rowCopy)+characterCopy;
+                            }
+                            break;
+                        }
+                    case (12):{
+                        short rowCopy = 0;
+                        if (rowNr<rows){
+                            rowCopy = (short) (rowNr+1);
+                        }
+                        if (Character.compare(character, 'C') <= 0 && Character.compare(character, 'A') > 0) {
+                            char characterCopy = (char) (character-1);
+                            nextSeat= String.valueOf(rowCopy)+characterCopy;
+                        }
+                        else if (Character.compare(character, 'F') < 0){
+                            char characterCopy = (char) (character+1);
+                            nextSeat= String.valueOf(rowCopy)+characterCopy;
+                        }
+                        else {
+                            char characterCopy = (char) (character-1);
+                            nextSeat= String.valueOf(rowCopy)+characterCopy;
+                        }
+                        break;
+                    }
+                    case (13):{
+                        short rowCopy = 0;
+                        if (rowNr<rows){
+                            rowCopy = (short) (rowNr+1);
+                        }
+                            if (Character.compare(character, 'C') <= 0 && Character.compare(character, 'B') > 0) {
+                                char characterCopy = (char) (character-2);
+                                nextSeat= String.valueOf(rowCopy)+characterCopy;
+                            }
+                            else if (Character.compare(character, 'E') < 0){
+                                char characterCopy = (char) (character+2);
+                                nextSeat= String.valueOf(rowCopy)+characterCopy;
+                            }
+                            else {
+                                char characterCopy = (char) (character-2);
+                                nextSeat= String.valueOf(rowCopy)+characterCopy;
+                            }
+                            break;
+                        }
+                        case (14):{
+                            short rowCopy = 0;
+                            if (rowNr<rows){
+                                rowCopy = (short) (rowNr+1);
+                            }
+                            if (Character.compare(character, 'C') <= 0) { // daca <c -> du-te o pozitie in dreapta
+                                char characterCopy = (char) (character+1);
+                                nextSeat= String.valueOf(rowCopy)+characterCopy;
+                            }
+                            else if (Character.compare(character, 'F') <= 0){ //DACA char<F -> du-te o pozitie in stanga
+                                char characterCopy = (char) (character-1);
+                                nextSeat= String.valueOf(rowCopy)+characterCopy;
+                            }
+                            break;
+                        }
+                        case (15):{
+                            short rowCopy = 0;
+                            if (rowNr<rows){
+                                rowCopy = (short) (rowNr+1);
+                            }
+                            if (Character.compare(character, 'C') <= 0) { // daca <c -> du-te o pozitie in dreapta
+                                char characterCopy = (char) (character+2);
+                                nextSeat= String.valueOf(rowCopy)+characterCopy;
+                            }
+                            else if (Character.compare(character, 'F') <= 0){ //DACA char<F -> du-te o pozitie in stanga
+                                char characterCopy = (char) (character-2);
+                                nextSeat= String.valueOf(rowCopy)+characterCopy;
+                            }
+                            break;
+                        }
+                        case (16):{
+                            short rowCopy = 0;
+                            if (rowNr<rows){
+                                rowCopy = (short) (rowNr+1);
+                            }
+                            if (Character.compare(character, 'C') <= 0) { // daca <c -> du-te o pozitie in dreapta
+                                char characterCopy = (char) (character+3);
+                                nextSeat= String.valueOf(rowCopy)+characterCopy;
+                            }
+                            else if (Character.compare(character, 'F') <= 0){ //DACA char<F -> du-te o pozitie in stanga
+                                char characterCopy = (char) (character-3);
+                                nextSeat= String.valueOf(rowCopy)+characterCopy;
+                            }
+                            break;
+                        }
+                    default: {nextSeat= generateFirstSeat();}
 
-//        DE CONTINUAT LOGICA PENRTU URMATOARELE LOCURI(pt a fi la rand)
-//        primul este generat si nu se repeta
-
+                }
+                alreadyUsed=(usedSeats.contains(nextSeat)||generatedSeats.contains(nextSeat));
+                tryAtempt++;
+            }
+            generatedSeats.add(nextSeat);
+        }
 
 
     }
@@ -69,8 +336,14 @@ public class CheckIn {
         Random rnd = new Random();
         char c = chars.charAt(rnd.nextInt(chars.length()));
         seat = String.valueOf(randomRow)+c;
-        return seat;
+        return "12C";
     }
+
+
+
+
+
+
 
 
 }

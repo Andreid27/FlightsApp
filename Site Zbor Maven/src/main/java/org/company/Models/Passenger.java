@@ -5,15 +5,16 @@ public class Passenger {
     String name;
     String surname;
     String seatNumber;
+    String identificationNumber;
 
 
-    public Passenger(int id, String surname, String name,  String seatNumber) {
+    public Passenger(int id, String name, String surname, String seatNumber, String identificationNumber) {
         this.id = id;
-        this.surname = surname;
         this.name = name;
+        this.surname = surname;
         this.seatNumber = seatNumber;
+        this.identificationNumber = identificationNumber;
     }
-
 
     public int getId() {
         return id;
@@ -33,5 +34,9 @@ public class Passenger {
 
     public void setSeatNumber(String seatNumber) {
         this.seatNumber = seatNumber;
+    }
+
+    public String getIdentificationNumber() {
+        return identificationNumber;
     }
 }

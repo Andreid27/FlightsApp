@@ -1,11 +1,14 @@
 package org.company.Models;
 
+import java.util.HashSet;
+
 public class Reservation {
     private int id;
     private User user;
     private int seats;
     private Flight flight;
     private float price;
+    private HashSet<Passenger> passengers;
 
     public Reservation(int id, User user, int seats,float price, Flight flight) {
         this.id = id;
