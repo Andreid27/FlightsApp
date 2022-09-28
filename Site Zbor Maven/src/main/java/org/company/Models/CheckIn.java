@@ -52,7 +52,6 @@ public class CheckIn {
     public int getReservationId() {
         return reservationId;
     }
-
     public void generateSeatNumber(){
         boolean alreadyUsed = true;
         String firstSeat = new String();
