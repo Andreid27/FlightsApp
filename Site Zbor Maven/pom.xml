@@ -89,6 +89,25 @@
       <version>2.1</version>
     </dependency>
 
+    <!-- https://mvnrepository.com/artifact/com.openhtmltopdf/openhtmltopdf-core -->
+    <dependency>
+      <groupId>com.openhtmltopdf</groupId>
+      <artifactId>openhtmltopdf-core</artifactId>
+      <version>1.0.10</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/com.openhtmltopdf/openhtmltopdf-objects -->
+    <dependency>
+      <groupId>com.openhtmltopdf</groupId>
+      <artifactId>openhtmltopdf-objects</artifactId>
+      <version>1.0.10</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/com.openhtmltopdf/openhtmltopdf-slf4j -->
+    <dependency>
+      <groupId>com.openhtmltopdf</groupId>
+      <artifactId>openhtmltopdf-slf4j</artifactId>
+      <version>1.0.10</version>
+    </dependency>
+
 
 
   </dependencies>

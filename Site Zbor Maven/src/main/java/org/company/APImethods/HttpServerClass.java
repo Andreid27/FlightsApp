@@ -129,6 +129,22 @@ public class HttpServerClass {
             }
         }));
 
+        server.createContext("/api/getCheckIn", (exchange -> {
+            if ("GET".equals(exchange.getRequestMethod())) {
+                try {
+                    CheckInService.getCheckIn(exchange);
+                } catch (ParseException e) {
+                    throw new RuntimeException(e);
+                }
+            } else if ("OPTIONS".equals(exchange.getRequestMethod())) {
+                OPTIONS.optionsMethod(exchange);
+
+            } else {
+                exchange.sendResponseHeaders(405, -1);// 405 Method Not Allowed
+            }
+        }));
+
+
 
 
         server.setExecutor(null); // creates a default executor

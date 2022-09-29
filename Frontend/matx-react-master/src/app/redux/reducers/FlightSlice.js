@@ -96,6 +96,18 @@ export const removeFeedback = createAsyncThunk(
   }
 );
 
+export const getCheckIn = createAsyncThunk('flightApp/rezervations/getCheckIn', async (user) => {
+  const response = await axios.get(apiSpec.GET_CHECK_IN, {
+    params: {
+      password: window.localStorage.getItem('password'),
+      userId: window.localStorage.getItem('userId'),
+    },
+  });
+  const data = await response.data;
+
+  return data;
+});
+
 const reservationsAdapter = createEntityAdapter({
   selectId: (reservation) => reservation.id,
 });

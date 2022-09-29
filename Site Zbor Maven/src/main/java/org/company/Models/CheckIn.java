@@ -25,6 +25,11 @@ public class CheckIn {
         this.rows = (short) (max_airplane_seats/6);
     }
 
+    public CheckIn(HashSet<Passenger> passengers, int reservationId) {
+        this.passengers = passengers;
+        this.reservationId = reservationId;
+    }
+
     public int getSeatsToGenerate() {
         return seatsToGenerate;
     }

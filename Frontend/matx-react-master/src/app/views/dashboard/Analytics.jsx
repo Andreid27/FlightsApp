@@ -7,6 +7,7 @@ import StatCards from './shared/StatCards';
 import StatCards2 from './shared/StatCards2';
 import YourReservations from './shared/YourReservations';
 import ResevationInfo from './shared/ReservationInfo';
+import Base64Decode from './shared/Base64Decode';
 
 const ContentBox = styled('div')(({ theme }) => ({
   margin: '30px',
@@ -58,6 +59,7 @@ const Analytics = () => {
                 height="160px"
                 color={[palette.primary.dark, palette.primary.main, palette.primary.light]}
               />
+              <Base64Decode />
             </Card>
 
             <ResevationInfo />
