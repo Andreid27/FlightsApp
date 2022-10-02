@@ -15,6 +15,8 @@ public class CheckIn {
     private HashSet<Passenger> passengers;
     int reservationId;
 
+    private Flight flight;
+
 
     public CheckIn(int seatsToGenerate, HashSet<String> usedSeats, int max_airplane_seats,HashSet<Passenger> passengers,int reservationId) {
         this.seatsToGenerate = seatsToGenerate;
@@ -28,6 +30,12 @@ public class CheckIn {
     public CheckIn(HashSet<Passenger> passengers, int reservationId) {
         this.passengers = passengers;
         this.reservationId = reservationId;
+    }
+
+
+    public CheckIn(HashSet<Passenger> passengers, Flight flight) {
+        this.passengers = passengers;
+        this.flight = flight;
     }
 
     public int getSeatsToGenerate() {
@@ -44,6 +52,10 @@ public class CheckIn {
 
     public short getRows() {
         return rows;
+    }
+
+    public Flight getFlight() {
+        return flight;
     }
 
     public HashSet<String> getGeneratedSeats() {

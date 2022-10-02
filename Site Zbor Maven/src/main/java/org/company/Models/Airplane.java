@@ -13,6 +13,11 @@ public class Airplane {
         this.max_capacity = max_capacity;
     }
 
+    public Airplane(String brand, String model) {
+        Brand = brand;
+        Model = model;
+    }
+
     public int getId() {
         return id;
     }

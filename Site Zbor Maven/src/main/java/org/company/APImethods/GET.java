@@ -6,6 +6,9 @@ import org.json.simple.parser.ParseException;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -63,6 +66,18 @@ public class GET {
 //        output.flush();
 //        output.close();
 //    }
+    public static String getFile(String path) throws IOException {
+        Map<String,String> file=new HashMap<>();
+        Path filePath = Paths.get(path);
+        System.out.println(Files.exists(filePath));
+
+        byte[] inFileBytes = Files.readAllBytes(filePath);
+        byte[] encoded = java.util.Base64.getEncoder().encode(inFileBytes);
+//        file.put(String.valueOf(filePath.getFileName()),new String(encoded));
+        file.put("",new String(encoded));
+
+        return new String(encoded);
+    }
 
 
 }

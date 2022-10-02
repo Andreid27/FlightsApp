@@ -1,0 +1,418 @@
+<html>
+<head>
+<meta charset="utf-8"></meta>
+<meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+  
+<title>Boarding Pass</title>
+<!--sThe following script tag downloads a font from the Adobe Edge Web Fonts server for use within the web page. We recommend that you do not modify it.-->
+
+
+<style>
+@page {
+  size: A4 portrait;
+  margin: 0;
+  background: white;
+  display: block;
+  margin: 0 auto;
+  margin-bottom: 0.5cm;
+}
+body {
+  background: rgb(204,204,204); 
+}
+
+/* Container */
+.container {
+	margin-left: 0px;
+	margin-right: 0px;
+	height: 1000px;
+	background-color: #FFFFFF;
+}
+/* Navigation */
+header {
+	width: 100%;
+	height: 5%;
+	background-color: #52bad5;
+	border-bottom: 1px solid #2C9AB7;
+}
+.logo {
+	color: #fff;
+	font-weight: bold;
+	text-align: undefined;
+	width: 22%;
+	float: left;
+	margin-top: 15px;
+	margin-left: 25px;
+	letter-spacing: 4px;
+}
+nav {
+	float: right;
+	width: 50%;
+	text-align: right;
+	margin-right: 25px;
+}
+header nav ul {
+	list-style: none;
+	float: right;
+}
+nav ul li {
+	float: left;
+	color: #FFFFFF;
+	font-size: 14px;
+	text-align: left;
+	margin-right: 25px;
+	letter-spacing: 2px;
+	font-weight: bold;
+}
+ul li a {
+	color: #FFFFFF;
+	text-decoration: none;
+}
+ul li:hover a {
+	color: #2C9AB7;
+}
+.hero_header {
+	color: #FFFFFF;
+	text-align: center;
+	margin-top: -0\px;
+	margin-right: -0\px;
+	margin-bottom: 19\px;
+	margin-left: -0\px;
+	letter-spacing: 4px;
+}
+/* Hero Section */
+.hero {
+	background-color: #FFFFFF;
+	padding-top: 22px;
+	padding-bottom: 0px;
+}
+.hero_background {
+	background-color: #B3B3B3;
+	padding-top: 22px;
+	padding-bottom: 11px;
+
+}
+
+.light {
+	font-weight: bold;
+	color: #717070;
+}
+.tagline {
+	text-align: center;
+	color: #FFFFFF;
+	margin-top: 4px;
+	font-weight: lighter;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+}
+/* About Section */
+.text_column {
+	width: 29%;
+	text-align: justify;
+	font-weight: lighter;
+	line-height: 25px;
+	float: left;
+	padding-left: 20px;
+	padding-right: 20px;
+	color: #A3A3A3;
+}
+.about {
+	padding-left: 25px;
+	padding-right: 25px;
+	padding-top: 35px;
+	display: inline-block;
+	background-color: #FFFFFF;
+	margin-top: 0px;
+}
+/* Stats Gallery */
+.stats {
+	color: #717070;
+	margin-bottom: 5px;
+}
+
+#columns {
+  column-count: 2;
+}
+
+.gallery {
+margin-left: 50px;
+
+	/* clear: both; */
+	display: inline-block;
+	max-width: 50%;
+	/* [disabled]min-width: 400px;
+*/
+	padding-bottom: 35px;
+	margin-bottom: 0px;
+}
+.thumbnail {
+	width: 100%;
+	text-align: center;
+	margin-top: 70px;
+	margin-left: 0px;
+	background-color: #FFFFFF
+}
+.gallery .thumbnail h4 {
+	margin-top: 18px;
+	margin-right: 5px;
+	margin-bottom: 5px;
+	margin-left: 5px;
+	color: #52BAD5;
+	font-size: 22px;
+	background-color: #FFFFFF
+}
+.gallery .thumbnail p {
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	color: #A3A3A3;
+	background-color: #FFFFFF
+}
+/* Parallax Section */
+.banner {
+	background-color: #2D9AB7;
+	/* background-attachment: fixed; */
+	background-size: cover;
+	background-repeat: no-repeat;
+	display: inline-block;
+	width: 100%;
+	height: 26vh;
+}
+.image{
+	max-width: 15%;
+	margin-left: 5%;
+	padding-top: 20px;
+	margin-bottom: -160px;
+	/* position: absolute; */
+}
+#threeColumns {
+  	column-count: 3;
+}
+.columnThreeColumns{
+	padding: 10%;
+	max-width: 35%;
+	font-size: 12px;
+	color: #A3A3A3;
+}
+#columnsBanner {
+	background-color: #2D9AB7;
+	width: 100%;
+	max-height: 500px;
+  	column-count: 2;
+}
+.firstRow{
+	max-width: 40%;
+	font-size: 15px;
+	margin-left: 250px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+.secondRow{
+	margin-top: -220px;
+	margin-left: 500px;
+	padding-top: 3px;
+	max-width: 40%;
+}
+.parallax {
+	color: #FFFFFF;
+	text-align: right;
+	padding-right: 100px;
+	padding-top: 0px;
+	letter-spacing: 2px;
+	margin-top: 0px;
+	max-height: 50%;
+	max-width: 40%;
+	margin-left: 246px;
+}
+.parallax_description {
+	color: #FFFFFF;
+	text-align: right;
+	padding-right: 100px;
+	width: 30%;
+	float: right;
+	font-weight: lighter;
+	line-height: 23px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+}
+/* More info */
+footer {
+	background-color: #FFFFFF;
+	padding-bottom: 35px;
+}
+.footer_column {
+	text-align: center;
+	padding-top: 30px;
+	float: left;
+	padding-left: 33px;
+	padding-right: 49px;
+}
+footer .footer_column h3 {
+	color: #B3B3B3;
+	text-align: center;
+}
+footer .footer_column p {
+	color: #717070;
+	background-color: #FFFFFF;
+}
+.cards {
+	width: 100%;
+	height: auto;
+	max-width: 400px;
+	max-height: 200px;
+}
+footer .footer_column p {
+	text-align: justify;
+	line-height: 25px;
+	font-weight: lighter;
+}
+.button {
+	width: 200px;
+	margin-top: 40px;
+	margin-right: auto;
+	margin-bottom: auto;
+	margin-left: auto;
+	padding-top: 20px;
+	padding-right: 10px;
+	padding-bottom: 20px;
+	padding-left: 10px;
+	text-align: center;
+	vertical-align: middle;
+	border-radius: 0px;
+	text-transform: uppercase;
+	font-weight: bold;
+	letter-spacing: 2px;
+	border: 3px solid #FFFFFF;
+	color: #FFFFFF;
+}
+.button:hover {
+	background-color: #FEFEFE;
+	color: #C4C4C4;
+	cursor: pointer;
+}
+.copyright {
+	text-align: center;
+	padding-top: 7px;
+	padding-bottom: 7px;
+	background-color: #717070;
+	color: #FFFFFF;
+	text-transform: uppercase;
+	font-weight: lighter;
+	letter-spacing: 2px;
+	border-top-width: 2px;
+	width: 100%;
+	padding-left: 0px;
+}
+.footer_banner {
+	background-color: #B3B3B3;
+	padding-top: 0px;
+	margin-bottom: 0px;
+	background-repeat: repeat;
+	font-size: 9px;
+}
+footer {
+	display: inline-block;
+	width: 100%;
+}
+.hidden {
+	display: none;
+}
+
+  </style>
+</head>
+<body>
+	<page>
+<!-- Main Container -->
+<div class="container"> 
+  <!-- Navigation -->
+  <header>
+    <h4 class="logo">FLIGHT APP</h4>
+    <nav>
+    </nav>
+  </header>
+  <!-- Hero Section -->
+<section class="hero" id="hero">
+	<div class="hero_background">
+    <h2 class="hero_header">BOARDING <span class="light">PASS</span></h2></div>
+  <!-- Stats Gallery Section -->
+  <section id="columns">
+  <div class="gallery">
+    <div class="thumbnail">
+      <h1 class="stats">DEPARTURE LOCATION</h1>
+      <h4>|departure_location|</h4>
+      <p>This is the departure location and airport.</p>
+    </div>
+    <div class="thumbnail" >
+      <h1 class="stats">LANDING LOCATION</h1>
+      <h4>|landing_location|</h4>
+      <p>The landing location and airport.</p>
+    </div>
+  </div>
+  <div class="columns">
+  <div class="gallery">
+    <div class="thumbnail">
+      <h1 class="stats">DEPARTURE TIME</h1>
+      <h4>|departure_time|</h4>
+      <p>The departure time is local time.</p>
+    </div>
+    <div class="thumbnail">
+      <h1 class="stats">LANDING TIME &#160;</h1>
+      <h4>|landing_time|</h4>
+      <p>The landing time is local time.</p>
+    </div>
+  </div></div>
+  </section>
+  <!-- Parallax Section -->
+  <img src="file:///G:/Desktop/CURS%20JAVA%201%20-%20Professional/PROBLEME%20EXTRA/Site%20Zbor%20Maven/data/images/user.png" class="image"/>
+<div class="imageContainer">
+  <section id="columnsBanner">
+	<div class="firstRow">
+	  <div style="color: #ffffff;">
+		<h2 id="id">FIRST NAME: </h2> <h3>|first_name|</h3>
+		</div>
+		<div style="color: #ffffff;">
+			<h2 id="id">LAST NAME: </h2> <h3>|last_name|</h3>
+		</div>
+	</div>
+	<div class="secondRow">
+    <div style="color: #ffffff;">
+	  <h2 id="id">ID:</h2> <h3>|id|</h3>
+	  </div>
+    <div style=" color: #ffffff;">
+	  	  <h2>SEAT:</h2> <h3> |seat|</h3>
+	</div>
+</div>
+<!--    <p class="parallax_description">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam</p>-->
+  </section>
+</div>
+  <!-- More Info Section -->
+	<section id="threeColumns">
+		  <div class="columnThreeColumns" style="padding-top: 0px;">
+			<h2>Flight Number: </h2> <h3>
+				|flight_number|</h3>
+			</div>
+			<div class="columnThreeColumns">
+				<h2>Operator Company</h2> <h3>|company| </h3>
+			</div>
+		<div class="columnThreeColumns">
+			<h2>Airplane Model</h2> <h3>|airplane| </h3>
+		  </div>
+	<!--    <p class="parallax_description">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam</p>-->
+	  </section>
+  <!-- Footer Section -->
+  <section class="footer_banner" id="contact">
+	<div class="copyright">2022 - <strong>FLIGHT APP</strong></div>
+</section>
+  <!-- Copyrights Section -->
+		</section></div>
+	</page>
+<!-- Main Container Ends -->
+</body>
+</html>
+
+
+
+
+

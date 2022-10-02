@@ -45,6 +45,16 @@ public class Flight {
         this.status_CIN = status_CIN;
     }
 
+    public Flight(String flightNumber, String company, Airplane airplane, String departureTimestamp, String landingTimestamp, String departureLocation, String landingLocation) {
+        this.flightNumber = flightNumber;
+        this.company = company;
+        this.airplane = airplane;
+        this.departureTimestamp = departureTimestamp;
+        this.landingTimestamp = landingTimestamp;
+        this.departureLocation = departureLocation;
+        this.landingLocation = landingLocation;
+    }
+
     public int getId() {
         return id;
     }

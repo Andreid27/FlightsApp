@@ -63,32 +63,24 @@ public class CheckInService {
         boolean userMatch = User.DBverifyUserByIdAndPassword(user);
         Map destinations = null;
         if (userMatch){
-//                Map<String,String> file = CheckInService.getFile();
-                CheckInService.createFile();
-                GET.getResponse(exchange, CheckInService.getFile(),200);
-
+            try {
+                CheckIn checkIn = CheckInControler.getCheckIn(queryMap.get("reservationId"));
+                CheckInService.createFile(checkIn);
+                GET.getResponse(exchange, GET.getFile("G:/Desktop/CURS JAVA 1 - Professional/ticket-1-Day-Pass-Andrei-Gabriel-Dinca.pdf"),200);
+            } catch (SQLException e) {
+                GET.getResponse(exchange,"DATABASES ERROR",405);
+            }
         }
         else {GET.getResponse(exchange,"Unauthorized",401);}
 
     }
 
 
-    public static String getFile() throws IOException {
-        Map<String,String> file=new HashMap<>();
-        Path path = Paths.get("G:/Desktop/CURS JAVA 1 - Professional/ticket-1-Day-Pass-Andrei-Gabriel-Dinca.pdf");
-        System.out.println(Files.exists(path));
-
-        byte[] inFileBytes = Files.readAllBytes(path);
-        byte[] encoded = java.util.Base64.getEncoder().encode(inFileBytes);
-//        file.put(String.valueOf(path.getFileName()),new String(encoded));
-        file.put("",new String(encoded));
-
-        return new String(encoded);
-    }
 
 
 
-    public static void createFile() throws IOException {
+
+    public static void createFile(CheckIn checkIn) throws IOException {
         var renderedPdfBytes = new ByteArrayOutputStream();
         var builder = new PdfRendererBuilder();
         Path template = Paths.get("data/template.html");
@@ -97,41 +89,50 @@ public class CheckInService {
         if(Files.exists(usedTemplate)){
             Files.delete(usedTemplate);
             Files.copy(template,usedTemplate );
-        }
-        else {
+        } else {
         Files.copy(template,usedTemplate );
         }
-
+       Passenger[]  passengers = checkIn.getPassengers().toArray(new Passenger[checkIn.getPassengers().size()]);
+        Passenger passenger = passengers[0];
+        String htmlTemplate = new String();
         BufferedReader br = new BufferedReader(Files.newBufferedReader(usedTemplate));
         try(br){
             String line = br.readLine();
             List<String> list = new ArrayList<>();
-            while (line != null){
-                if (line.contains("|departure_location|")||line.contains("|landing_location|")||line.contains("|departure_time|")||line.contains("|landing_time|")
-                ||line.contains("|first_name|")||line.contains("|last_name|")||line.contains("|id|")||line.contains("|seat|")||line.contains("|flight_number|")){
-
-                }
+                while (line != null){
+                    if (line.contains("|departure_location|")||line.contains("|landing_location|")||line.contains("|departure_time|")||line.contains("|landing_time|") ||line.contains("|company|") ||line.contains("|airplane|")
+                            ||line.contains("|first_name|")||line.contains("|last_name|")||line.contains("|id|")||line.contains("|seat|")||line.contains("|flight_number|")) {
+                        if (line.contains("|departure_location|")) {
+                            line = line.replace("|departure_location|",checkIn.getFlight().getDepartureLocation());
+                        } else if (line.contains("|departure_time|")) {
+                            line = line.replace("|departure_time|",checkIn.getFlight().getDepartureTimestamp());
+                        } else if (line.contains("|landing_location|")) {
+                            line = line.replace("|landing_location|",checkIn.getFlight().getLandingLocation());
+                        } else if (line.contains("|landing_time|")) {
+                            line = line.replace("|landing_time|",checkIn.getFlight().getLandingTimestamp());
+                        } else if (line.contains("|flight_number|")) {
+                            line = line.replace("|flight_number|",checkIn.getFlight().getFlightNumber());
+                        } else if (line.contains("|company|")) {
+                        line = line.replace("|company|",checkIn.getFlight().getCompany());
+                        } else if (line.contains("|airplane|")) {
+                        line = line.replace("|airplane|",(checkIn.getFlight().getAirplane().getBrand()+" "+checkIn.getFlight().getAirplane().getModel()));
+                        } else if (line.contains("|first_name|")) {
+                            line = line.replace("|first_name|",passenger.getName());
+                        } else if (line.contains("|last_name|")) {
+                            line = line.replace("|last_name|",passenger.getSurname());
+                        } else if (line.contains("|seat|")) {
+                            line = line.replace("|seat|",passenger.getSeatNumber());
+                        } else if (line.contains("|id|")) {
+                            line = line.replace("|id|",passenger.getIdentificationNumber());
+                        }
+                    }
                 list.add(line);
                 line= br.readLine();
             }
+                htmlTemplate = String.join(" ",list);
         }
 
-        builder.withHtmlContent("<html xmlns=\"http://www.w3.org/1999/xhtml\">\n" +
-                "<head>\n" +
-                "  <title>Hello, World!</title>\n" +
-                "  <style>\n" +
-                "    h1 {\n" +
-                "      text-decoration: underline;\n" +
-                "    }\n" +
-                "  </style>\n" +
-                "</head>\n" +
-                "\n" +
-                "<body>\n" +
-                "  <h1>Hello, World!</h1>\n" +
-                "  <p>Lorem ipsum dolor sit amet.</p>\n" +
-                "</body>\n" +
-                "\n" +
-                "</html>", "G:/Desktop/CURS JAVA 1 - Professional/PROBLEME EXTRA/Site Zbor Maven/data/template.html");
+        builder.withHtmlContent(htmlTemplate, "G:/Desktop/CURS JAVA 1 - Professional/PROBLEME EXTRA/Site Zbor Maven/data/template.html");
         builder.toStream(renderedPdfBytes);
         builder.run();
         renderedPdfBytes.close();

@@ -16,6 +16,13 @@ public class Passenger {
         this.identificationNumber = identificationNumber;
     }
 
+    public Passenger(String name, String surname, String seatNumber, String identificationNumber) {
+        this.name = name;
+        this.surname = surname;
+        this.seatNumber = seatNumber;
+        this.identificationNumber = identificationNumber;
+    }
+
     public int getId() {
         return id;
     }
