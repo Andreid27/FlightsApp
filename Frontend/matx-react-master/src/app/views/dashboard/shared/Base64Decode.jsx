@@ -31,7 +31,7 @@ const Base64Decode = () => {
       params: {
         password: window.localStorage.getItem('password'),
         userId: window.localStorage.getItem('userId'),
-        reservationId: '37',
+        reservationId: '38',
       },
     });
     const data = await response.data;
