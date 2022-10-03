@@ -4,8 +4,8 @@ import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import org.company.APImethods.GET;
 import org.company.APImethods.POST;
-import org.company.Controllers.ReservationController;
-import org.company.Controllers.UserController;
+import org.company.dao.ReservationDao;
+import org.company.dao.UserDao;
 import org.company.Models.NewReservation;
 import org.company.Models.Reservation;
 import org.company.Models.User;
@@ -22,13 +22,13 @@ public class ReservationsService {
     public static void getReservationsByUserIdAndPassword(HttpExchange exchange) throws IOException, ParseException {
         Map<String,String> queryMap = GET.getRequest(exchange);
         User user = new User(Integer.parseInt(queryMap.get("userId")), queryMap.get("password"));
-        Optional<User> user1 = UserController.getUserById(user);
+        Optional<User> user1 = UserDao.getUserById(user);
         User dbUser = user1.orElseGet(() -> new User(0,null));
         boolean userMatch = user.verifyUserIdAndPassword(dbUser);
         if (userMatch){
             ArrayList<Reservation> reservations = null;
             try {
-                reservations = ReservationController.getUserRezervations(dbUser);
+                reservations = ReservationDao.getUserRezervations(dbUser);
             } catch (SQLException e) {
                 POST.postResponse(exchange,"USER NOT FOUND",200);
             }
@@ -44,13 +44,13 @@ public class ReservationsService {
         JSONObject jsonObject = POST.postRequest(exchange);
         User user = new Gson().fromJson(jsonObject.toString(), User.class);
         NewReservation newReservation = new Gson().fromJson(jsonObject.toString(), NewReservation.class);
-        Optional<User> user1 = UserController.getUserById(user);
+        Optional<User> user1 = UserDao.getUserById(user);
         User dbUser = user1.orElseGet(() -> new User(0,null));
         boolean userMatch = user.verifyUserIdAndPassword(dbUser);
         if (userMatch){
             Reservation addedReservation = null;
             try {
-                addedReservation = ReservationController.addReservation(newReservation,dbUser);
+                addedReservation = ReservationDao.addReservation(newReservation,dbUser);
             } catch (SQLException e) {
                 System.out.println(e);
                 POST.postResponse(exchange,"USER NOT FOUND",200);

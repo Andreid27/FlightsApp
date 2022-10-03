@@ -1,4 +1,4 @@
-package org.company.Controllers;
+package org.company.dao;
 
 import org.company.DATABASE;
 import org.company.Models.User;
@@ -11,7 +11,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Optional;
 
-public class UserController {
+public class UserDao {
     public static ArrayList<User> getAllUsers() throws SQLException {
         ArrayList<User> users = new ArrayList<>();
         String getAllUsers = "SELECT * FROM users";

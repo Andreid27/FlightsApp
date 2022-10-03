@@ -1,6 +1,6 @@
 package org.company.Models;
 
-import org.company.Controllers.UserController;
+import org.company.dao.UserDao;
 
 import java.util.Optional;
 
@@ -71,7 +71,7 @@ public class User {
 
 
     public static boolean DBverifyUserByIdAndPassword(User user){
-        Optional<User> user1 = UserController.getUserById(user);
+        Optional<User> user1 = UserDao.getUserById(user);
         User dbUser = user1.orElseGet(() -> new User(0,null));
         return user.verifyUserIdAndPassword(dbUser);
     }

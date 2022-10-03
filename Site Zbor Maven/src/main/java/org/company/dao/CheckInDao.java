@@ -1,4 +1,4 @@
-package org.company.Controllers;
+package org.company.dao;
 
 import org.company.DATABASE;
 import org.company.Models.Airplane;
@@ -13,7 +13,7 @@ import java.sql.Statement;
 import java.util.HashSet;
 import java.util.Set;
 
-public class CheckInControler {
+public class CheckInDao {
     public static CheckIn getRezervationByIdSeats(CheckIn checkIn, int userId) throws SQLException {
         short nrLocuri = 0;
         HashSet<String> seats = new HashSet<>();

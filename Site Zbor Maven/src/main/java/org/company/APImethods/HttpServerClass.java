@@ -133,8 +133,8 @@ public class HttpServerClass {
             if ("GET".equals(exchange.getRequestMethod())) {
                 try {
                     CheckInService.getCheckIn(exchange);
-                } catch (ParseException e) {
-                    throw new RuntimeException(e);
+                } catch (ParseException | IOException e) {
+                exchange.sendResponseHeaders(405, -1);// 405 Method Not Allowed
                 }
             } else if ("OPTIONS".equals(exchange.getRequestMethod())) {
                 OPTIONS.optionsMethod(exchange);

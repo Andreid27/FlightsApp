@@ -1,4 +1,4 @@
-package org.company.Controllers;
+package org.company.dao;
 
 import org.company.DATABASE;
 import org.company.Models.*;
@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-public class ReservationController {
+public class ReservationDao {
     public static ArrayList<Reservation> getUserRezervations(User user) throws SQLException {
         ArrayList<Reservation> reservations = new ArrayList<>();
         int userId = user.getUserId();
@@ -42,7 +42,7 @@ public class ReservationController {
     public static Reservation addReservation(NewReservation newReservation, User user) throws SQLException {
         Reservation dbReservation = null;
         int userId = user.getUserId();
-        Flight DBflight = FlightController.getFlightByIdAndFlightNumber(newReservation.getFlightId(),newReservation.getFlightNumber());
+        Flight DBflight = FlightDao.getFlightByIdAndFlightNumber(newReservation.getFlightId(),newReservation.getFlightNumber());
         double price = DBflight.getPrice();
         String transaction_number="null";
         String addReservationQuerry="INSERT INTO rezervari VALUES(null,"+userId+","+newReservation.getSeatsNumber()+","+newReservation.getFlightId()+","+price+","+transaction_number+");\n";

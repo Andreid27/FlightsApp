@@ -6,8 +6,8 @@ import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import org.company.APImethods.GET;
 import org.company.APImethods.POST;
-import org.company.Controllers.FlightController;
-import org.company.Controllers.UserController;
+import org.company.dao.FlightDao;
+import org.company.dao.UserDao;
 import org.company.Models.Flight;
 import org.company.Models.User;
 import org.json.simple.JSONObject;
@@ -25,13 +25,13 @@ public class FlightsService {
     public static void getUpcomingFlights(HttpExchange exchange) throws IOException, ParseException {
         Map<String,String> queryMap = GET.getRequest(exchange);
         User user = new User(Integer.parseInt(queryMap.get("userId")), queryMap.get("password"));
-        Optional<User> user1 = UserController.getUserById(user);
+        Optional<User> user1 = UserDao.getUserById(user);
         User dbUser = user1.orElseGet(() -> new User(0,null));
         boolean userMatch = user.verifyUserIdAndPassword(dbUser);
         if (userMatch){
             ArrayList<Flight> flights = null;
             try {
-                flights = FlightController.getUpcomingFlights(dbUser);
+                flights = FlightDao.getUpcomingFlights(dbUser);
             } catch (SQLException e) {
                 GET.getResponse(exchange,"CANNOT ACCES DATABASE",200);
             }
@@ -49,7 +49,7 @@ public class FlightsService {
         Map destinations = null;
         if (userMatch){
             try {
-                destinations = FlightController.getDestinations();
+                destinations = FlightDao.getDestinations();
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
@@ -73,7 +73,7 @@ public class FlightsService {
         ArrayList<Flight> RouteFlights = null;
         if (userMatch){
             try {
-                RouteFlights = FlightController.getFlightsByRoute(flightRoute);
+                RouteFlights = FlightDao.getFlightsByRoute(flightRoute);
                 POST.postResponse(exchange, RouteFlights.toString(), 200);
             } catch (SQLException e) {
                 POST.postResponse(exchange, "Database connection failed", 200);

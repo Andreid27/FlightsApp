@@ -69,7 +69,6 @@ public class GET {
     public static String getFile(String path) throws IOException {
         Map<String,String> file=new HashMap<>();
         Path filePath = Paths.get(path);
-        System.out.println(Files.exists(filePath));
 
         byte[] inFileBytes = Files.readAllBytes(filePath);
         byte[] encoded = java.util.Base64.getEncoder().encode(inFileBytes);

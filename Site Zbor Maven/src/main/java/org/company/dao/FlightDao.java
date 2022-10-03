@@ -1,4 +1,4 @@
-package org.company.Controllers;
+package org.company.dao;
 
 import org.company.DATABASE;
 import org.company.Models.Airplane;
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class FlightController {
+public class FlightDao {
 
 
     public static ArrayList<Flight> getUpcomingFlights(User user) throws SQLException {

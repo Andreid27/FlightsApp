@@ -1,13 +1,9 @@
 package org.company.Models;
 
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-
-import static org.company.Controllers.FlightController.getPassangersNoByFlightId;
 
 public class Flight {
     private int id;

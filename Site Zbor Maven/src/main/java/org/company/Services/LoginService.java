@@ -3,7 +3,7 @@ package org.company.Services;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import org.company.APImethods.POST;
-import org.company.Controllers.UserController;
+import org.company.dao.UserDao;
 import org.company.Models.User;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
@@ -18,7 +18,7 @@ public class LoginService {
     public static void login(HttpExchange exchange) throws IOException, ParseException {
         JSONObject jsonObject = postRequest(exchange);
         User user = new Gson().fromJson(jsonObject.toString(), User.class);
-        Optional<User> user1 = UserController.getUserByEmailAndPassword(user);
+        Optional<User> user1 = UserDao.getUserByEmailAndPassword(user);
         User dbUser = user1.orElseGet(() -> new User(0,null));
         boolean userMatch = user.verifyEmailAndPassword(dbUser);
         if (userMatch){
