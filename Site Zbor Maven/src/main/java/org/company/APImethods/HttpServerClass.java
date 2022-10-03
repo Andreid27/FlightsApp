@@ -1,6 +1,6 @@
 package org.company.APImethods;
 
-import org.company.Services.*;
+import org.company.Controllers.*;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
@@ -16,7 +16,7 @@ public class HttpServerClass {
         server.createContext("/api/login", (exchange -> {
             if ("POST".equals(exchange.getRequestMethod())) {
                 try {
-                    LoginService.login(exchange);
+                    LoginController.login(exchange);
                 } catch (ParseException e) {
                     throw new RuntimeException(e);
                 }
@@ -30,7 +30,7 @@ public class HttpServerClass {
         server.createContext("/api/register", (exchange -> {
             if ("POST".equals(exchange.getRequestMethod())) {
                 try {
-                    RegisterService.register(exchange);
+                    RegisterController.register(exchange);
                 } catch (ParseException e) {
                     throw new RuntimeException(e);
                 }
@@ -44,7 +44,7 @@ public class HttpServerClass {
         server.createContext("/api/rezervations", (exchange -> {
             if ("GET".equals(exchange.getRequestMethod())) {
                 try {
-                    ReservationsService.getReservationsByUserIdAndPassword(exchange);
+                    ReservationsController.getReservationsByUserIdAndPassword(exchange);
                 } catch (ParseException e) {
                     throw new RuntimeException(e);
                 }
@@ -59,7 +59,7 @@ public class HttpServerClass {
         server.createContext("/api/flights", (exchange -> {
             if ("GET".equals(exchange.getRequestMethod())) {
                 try {
-                    FlightsService.getUpcomingFlights(exchange);
+                    FlightsController.getUpcomingFlights(exchange);
                 } catch (ParseException e) {
                     throw new RuntimeException(e);
                 }
@@ -73,7 +73,7 @@ public class HttpServerClass {
         server.createContext("/api/destinations", (exchange -> {
             if ("GET".equals(exchange.getRequestMethod())) {
                 try {
-                    FlightsService.getDestinations(exchange);
+                    FlightsController.getDestinations(exchange);
                 } catch (ParseException e) {
                     throw new RuntimeException(e);
                 }
@@ -87,7 +87,7 @@ public class HttpServerClass {
         server.createContext("/api/routeFlights", (exchange -> {
             if ("POST".equals(exchange.getRequestMethod())) {
                 try {
-                    FlightsService.getRouteFlights(exchange);
+                    FlightsController.getRouteFlights(exchange);
                 } catch (ParseException e) {
                     throw new RuntimeException(e);
                 }
@@ -103,7 +103,7 @@ public class HttpServerClass {
         server.createContext("/api/NewReservation", (exchange -> {
             if ("POST".equals(exchange.getRequestMethod())) {
                 try {
-                    ReservationsService.addReservation(exchange);
+                    ReservationsController.addReservation(exchange);
                 } catch (ParseException e) {
                     throw new RuntimeException(e);
                 }
@@ -117,7 +117,7 @@ public class HttpServerClass {
         server.createContext("/api/CheckIn", (exchange -> {
             if ("POST".equals(exchange.getRequestMethod())) {
                 try {
-                    CheckInService.makeCheckIn(exchange);
+                    CheckInController.makeCheckIn(exchange);
                 } catch (ParseException e) {
                     throw new RuntimeException(e);
                 }
@@ -132,7 +132,7 @@ public class HttpServerClass {
         server.createContext("/api/getCheckIn", (exchange -> {
             if ("GET".equals(exchange.getRequestMethod())) {
                 try {
-                    CheckInService.getCheckIn(exchange);
+                    CheckInController.getCheckIn(exchange);
                 } catch (ParseException | IOException e) {
                 exchange.sendResponseHeaders(405, -1);// 405 Method Not Allowed
                 }

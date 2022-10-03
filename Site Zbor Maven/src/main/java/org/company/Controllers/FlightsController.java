@@ -1,4 +1,4 @@
-package org.company.Services;
+package org.company.Controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,7 +21,7 @@ import java.util.Optional;
 
 import static org.company.APImethods.POST.postRequest;
 
-public class FlightsService {
+public class FlightsController {
     public static void getUpcomingFlights(HttpExchange exchange) throws IOException, ParseException {
         Map<String,String> queryMap = GET.getRequest(exchange);
         User user = new User(Integer.parseInt(queryMap.get("userId")), queryMap.get("password"));

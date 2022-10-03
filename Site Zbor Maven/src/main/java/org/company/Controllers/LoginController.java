@@ -1,4 +1,4 @@
-package org.company.Services;
+package org.company.Controllers;
 
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
@@ -13,7 +13,7 @@ import java.util.Optional;
 
 import static org.company.APImethods.POST.postRequest;
 
-public class LoginService {
+public class LoginController {
 
     public static void login(HttpExchange exchange) throws IOException, ParseException {
         JSONObject jsonObject = postRequest(exchange);

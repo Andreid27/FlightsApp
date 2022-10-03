@@ -1,4 +1,4 @@
-package org.company.Services;
+package org.company.Controllers;
 
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
 
-public class ReservationsService {
+public class ReservationsController {
     public static void getReservationsByUserIdAndPassword(HttpExchange exchange) throws IOException, ParseException {
         Map<String,String> queryMap = GET.getRequest(exchange);
         User user = new User(Integer.parseInt(queryMap.get("userId")), queryMap.get("password"));
