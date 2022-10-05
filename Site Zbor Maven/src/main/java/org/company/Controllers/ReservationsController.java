@@ -18,13 +18,15 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
 
+import static org.company.Services.UserService.verifyUserIdAndPassword;
+
 public class ReservationsController {
     public static void getReservationsByUserIdAndPassword(HttpExchange exchange) throws IOException, ParseException {
         Map<String,String> queryMap = GET.getRequest(exchange);
         User user = new User(Integer.parseInt(queryMap.get("userId")), queryMap.get("password"));
         Optional<User> user1 = UserDao.getUserById(user);
         User dbUser = user1.orElseGet(() -> new User(0,null));
-        boolean userMatch = user.verifyUserIdAndPassword(dbUser);
+        boolean userMatch = verifyUserIdAndPassword(user,dbUser);
         if (userMatch){
             ArrayList<Reservation> reservations = null;
             try {
@@ -46,7 +48,7 @@ public class ReservationsController {
         NewReservation newReservation = new Gson().fromJson(jsonObject.toString(), NewReservation.class);
         Optional<User> user1 = UserDao.getUserById(user);
         User dbUser = user1.orElseGet(() -> new User(0,null));
-        boolean userMatch = user.verifyUserIdAndPassword(dbUser);
+        boolean userMatch = verifyUserIdAndPassword(user,dbUser);
         if (userMatch){
             Reservation addedReservation = null;
             try {

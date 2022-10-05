@@ -20,6 +20,8 @@ import java.util.Map;
 import java.util.Optional;
 
 import static org.company.APImethods.POST.postRequest;
+import static org.company.Services.UserService.DBverifyUserByIdAndPassword;
+import static org.company.Services.UserService.verifyUserIdAndPassword;
 
 public class FlightsController {
     public static void getUpcomingFlights(HttpExchange exchange) throws IOException, ParseException {
@@ -27,7 +29,7 @@ public class FlightsController {
         User user = new User(Integer.parseInt(queryMap.get("userId")), queryMap.get("password"));
         Optional<User> user1 = UserDao.getUserById(user);
         User dbUser = user1.orElseGet(() -> new User(0,null));
-        boolean userMatch = user.verifyUserIdAndPassword(dbUser);
+        boolean userMatch = verifyUserIdAndPassword(user,dbUser);
         if (userMatch){
             ArrayList<Flight> flights = null;
             try {
@@ -45,7 +47,7 @@ public class FlightsController {
     public static void getDestinations(HttpExchange exchange) throws IOException, ParseException {
         Map<String,String> queryMap = GET.getRequest(exchange);
         User user = new User(Integer.parseInt(queryMap.get("userId")), queryMap.get("password"));
-        boolean userMatch = User.DBverifyUserByIdAndPassword(user);
+        boolean userMatch = DBverifyUserByIdAndPassword(user);
         Map destinations = null;
         if (userMatch){
             try {
@@ -69,7 +71,7 @@ public class FlightsController {
         JSONObject jsonObject = postRequest(exchange);
         User user = new Gson().fromJson(jsonObject.toString(), User.class);
         Flight flightRoute= new Gson().fromJson(jsonObject.toString(), Flight.class);
-        boolean userMatch = User.DBverifyUserByIdAndPassword(user);
+        boolean userMatch = DBverifyUserByIdAndPassword(user);
         ArrayList<Flight> RouteFlights = null;
         if (userMatch){
             try {

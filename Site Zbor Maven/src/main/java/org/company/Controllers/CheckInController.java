@@ -18,6 +18,8 @@ import java.sql.SQLException;
 import java.util.*;
 
 import static org.company.Services.CheckInService.generateSeatNumber;
+import static org.company.Services.UserService.DBverifyUserByIdAndPassword;
+import static org.company.Services.UserService.verifyUserIdAndPassword;
 
 public class CheckInController {
     public static void makeCheckIn(HttpExchange exchange) throws IOException, ParseException {
@@ -26,7 +28,7 @@ public class CheckInController {
         CheckIn checkIn = new Gson().fromJson(jsonObject.toString(), CheckIn.class);
         Optional<User> user1 = UserDao.getUserById(user);
         User dbUser = user1.orElseGet(() -> new User(0,null));
-        boolean userMatch = user.verifyUserIdAndPassword(dbUser);
+        boolean userMatch = verifyUserIdAndPassword(user,dbUser);
         if (userMatch){
             try {
                 checkIn = CheckInDao.getRezervationByIdSeats(checkIn,dbUser.getUserId());
@@ -52,7 +54,7 @@ public class CheckInController {
     public static void getCheckIn(HttpExchange exchange) throws IOException, ParseException {
         Map<String,String> queryMap = GET.getRequest(exchange);
         User user = new User(Integer.parseInt(queryMap.get("userId")), queryMap.get("password"));
-        boolean userMatch = User.DBverifyUserByIdAndPassword(user);
+        boolean userMatch = DBverifyUserByIdAndPassword(user);
         if (userMatch){
             try {
                 CheckIn checkIn = CheckInDao.getCheckIn(queryMap.get("reservationId"));

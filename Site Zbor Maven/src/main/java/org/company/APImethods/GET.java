@@ -51,21 +51,6 @@ public class GET {
         output.close();
     }
 
-//    public static void getPdfResponse(HttpExchange exchange, String response, int rCode) throws IOException, ParseException {
-//        String responseText = response;//"The post was completed";
-//
-//        exchange.getResponseHeaders().set("Content-Type", "application/json");
-//        exchange.getResponseHeaders().set("Access-Control-Allow-Origin", "*");
-//        exchange.getResponseHeaders().set("Access-Control-Allow-Methods", "*");
-//        exchange.getResponseHeaders().set("Access-Control-Allow-Headers", "*");
-//        exchange.getResponseHeaders().set("Access-Control-Max-Age", "1728000");
-//        exchange.getResponseHeaders().set("Connection", "Keep-Alive");
-//        exchange.sendResponseHeaders(rCode, responseText.getBytes().length);
-//        OutputStream output = exchange.getResponseBody();
-//        output.write(responseText.getBytes());
-//        output.flush();
-//        output.close();
-//    }
     public static String getFile(String path) throws IOException {
         Map<String,String> file=new HashMap<>();
         Path filePath = Paths.get(path);

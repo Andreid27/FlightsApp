@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 import static org.company.APImethods.POST.postRequest;
+import static org.company.Services.UserService.verifyEmailAndPassword;
 
 public class LoginController {
 
@@ -20,7 +21,7 @@ public class LoginController {
         User user = new Gson().fromJson(jsonObject.toString(), User.class);
         Optional<User> user1 = UserDao.getUserByEmailAndPassword(user);
         User dbUser = user1.orElseGet(() -> new User(0,null));
-        boolean userMatch = user.verifyEmailAndPassword(dbUser);
+        boolean userMatch = verifyEmailAndPassword(user,dbUser);
         if (userMatch){
             POST.postResponse(exchange,dbUser.toString(),200);
     }

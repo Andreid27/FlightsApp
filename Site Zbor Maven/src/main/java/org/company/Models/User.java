@@ -55,25 +55,6 @@ public class User {
                 ", \"userRole\":\"" + userRole + '\"' +
                 "}";
     }
-    public boolean verifyUserIdAndPassword(User user){
-        boolean  verified = false;
-        if(this.userId==user.getUserId()&&this.password.equals(user.getPassword()))
-        {verified=true;}
-        return verified;
-    }
-    public boolean verifyEmailAndPassword(User user){
-        boolean  verified = false;
-        if(this.email.equals(user.getEmail())&&this.password.equals(user.getPassword()))
-        {verified=true;}
-        return verified;
-    }
 
-
-
-    public static boolean DBverifyUserByIdAndPassword(User user){
-        Optional<User> user1 = UserDao.getUserById(user);
-        User dbUser = user1.orElseGet(() -> new User(0,null));
-        return user.verifyUserIdAndPassword(dbUser);
-    }
 
 }

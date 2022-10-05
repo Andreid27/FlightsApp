@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.company.Services.FlightService.calculatePriceNow;
+
 public class FlightDao {
 
 
@@ -116,7 +118,7 @@ public class FlightDao {
                 short promo_options = resultSet.getShort("promo_options");
                 short passangers = resultSet.getShort("passangers");
                 Flight flightToAdd = new Flight(zbor_id,FlightNumber,Companie,new Airplane(aeronava_id,Producator,Model,nr_max_locuri),departure_timestamp,landing_timestamp,departure_location,landing_location,price,status_CIN);
-                flightToAdd.calculatePriceNow(promo_options,passangers);
+                flightToAdd = calculatePriceNow(promo_options,passangers,flightToAdd);
                 RouteFlights.add(flightToAdd);
             }
         }
@@ -156,7 +158,7 @@ public class FlightDao {
                 short promo_options = resultSet.getShort("promo_options");
                 short passangers = resultSet.getShort("passangers");
                 flightDB =new Flight(zbor_id,FlightNumber,Companie,new Airplane(aeronava_id,Producator,Model,nr_max_locuri),departure_timestamp,landing_timestamp,departure_location,landing_location,price,status_CIN);
-                flightDB.calculatePriceNow(promo_options,passangers);
+                flightDB = calculatePriceNow(promo_options,passangers,flightDB);
             }
         }
         return flightDB;
@@ -211,7 +213,7 @@ public class FlightDao {
                 short promo_options = resultSet.getShort("promo_options");
                 short passangers = resultSet.getShort("passangers");
                 Flight flightToAdd = new Flight(zbor_id,FlightNumber,Companie,new Airplane(aeronava_id,Producator,Model,nr_max_locuri),departure_timestamp,landing_timestamp,departure_location,landing_location,price,status_CIN);
-                flightToAdd.calculatePriceNow(promo_options,passangers);
+                flightToAdd = calculatePriceNow(promo_options,passangers,flightToAdd);
                 RouteFlights.add(flightToAdd);
             }
         }
