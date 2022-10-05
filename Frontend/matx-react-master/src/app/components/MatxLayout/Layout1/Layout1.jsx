@@ -112,7 +112,6 @@ const Layout1 = () => {
                 <Outlet />
               </MatxSuspense>
             </Box>
-            <button>Click here</button>
 
             {settings.footer.show && !settings.footer.fixed && <Footer />}
           </StyledScrollBar>
