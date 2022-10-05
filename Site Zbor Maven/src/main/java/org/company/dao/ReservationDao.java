@@ -13,7 +13,15 @@ public class ReservationDao {
     public static ArrayList<Reservation> getUserRezervations(User user) throws SQLException {
         ArrayList<Reservation> reservations = new ArrayList<>();
         int userId = user.getUserId();
-        String getUserReservations = "SELECT rezervare.id as rezerare_id,rezervare.locuri,rezervare.pret,zbor.id as zbor_id,zbor.FlightNumber,zbor.aeronava as aeronava_id,aeronava.Producator,aeronava.Model,aeronava.nr_max_locuri,zbor.Companie,zbor.departure_timestamp,zbor.landing_timestamp, zbor.departure_location,zbor.landing_location,zbor.status_CIN FROM rezervari rezervare JOIN users u ON u.id=rezervare.id_user JOIN zboruri zbor ON zbor.id=rezervare.id_zbor JOIN aeronave aeronava ON aeronava.id=zbor.aeronava WHERE u.id="+userId+";";
+        String getUserReservations = "SELECT rezervare.id as rezerare_id,rezervare.locuri,rezervare.pret,zbor.id as zbor_id,zbor.FlightNumber,zbor.aeronava as aeronava_id,aeronava.Producator,aeronava.Model,aeronava.nr_max_locuri,zbor.Companie,zbor.departure_timestamp,zbor.landing_timestamp, zbor.departure_location,zbor.landing_location,zbor.status_CIN,"+
+        "COUNT(persoane.id) "+
+        "FROM rezervari rezervare "+
+        "JOIN users u ON u.id=rezervare.id_user "+
+        "JOIN zboruri zbor ON zbor.id=rezervare.id_zbor "+
+        "JOIN aeronave aeronava ON aeronava.id=zbor.aeronava "+
+        "LEFT JOIN persoane_cin persoane ON persoane.id_rezervare=rezervare.id "+
+        "WHERE u.id="+user.getUserId() +
+        " GROUP BY rezervare.id;";
         DATABASE db = DATABASE.getInstance();
         Connection connection = db.getConnection();
         Statement statement = connection.createStatement();
@@ -34,7 +42,8 @@ public class ReservationDao {
                 String departure_location = resultSet.getString("departure_location");
                 String landing_location = resultSet.getString("landing_location");
                 String status_CIN = resultSet.getString("status_CIN");
-                reservations.add(new Reservation(rezerare_id,user,locuri,pret,new Flight(zbor_id,FlightNumber,Companie,new Airplane(aeronava_id,Producator,Model,nr_max_locuri),departure_timestamp,landing_timestamp,departure_location,landing_location,status_CIN)));
+                short persoaneCinNo = resultSet.getShort("COUNT(persoane.id)");
+                reservations.add(new Reservation(rezerare_id,user,locuri,persoaneCinNo,pret,new Flight(zbor_id,FlightNumber,Companie,new Airplane(aeronava_id,Producator,Model,nr_max_locuri),departure_timestamp,landing_timestamp,departure_location,landing_location,status_CIN)));
             }
         }
         return reservations;

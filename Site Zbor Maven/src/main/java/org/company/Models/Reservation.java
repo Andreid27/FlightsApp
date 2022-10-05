@@ -9,6 +9,17 @@ public class Reservation {
     private Flight flight;
     private float price;
     private HashSet<Passenger> passengers;
+    private short persoaneCinNo;
+
+
+    public Reservation(int id, User user, int seats,short persoaneCinNo,float price, Flight flight) {
+        this.id = id;
+        this.user = user;
+        this.seats = seats;
+        this.flight = flight;
+        this.price = price;
+        this.persoaneCinNo = persoaneCinNo;
+    }
 
     public Reservation(int id, User user, int seats,float price, Flight flight) {
         this.id = id;
@@ -45,6 +56,7 @@ public class Reservation {
                 "\"id\":" + id +
                 ",\n \"user\": " + user +
                 ",\n \"seats\": \"" + seats + "\"" +
+                ",\n \"persoaneCinNo\": \"" + persoaneCinNo + "\"" +
                 ",\n \"price\": \"" + price + "\"" +
                 ",\n \"flight\": " + flight +
                 "}";

@@ -32,7 +32,7 @@ public class ReservationsController {
             try {
                 reservations = ReservationDao.getUserRezervations(dbUser);
             } catch (SQLException e) {
-                POST.postResponse(exchange,"USER NOT FOUND",200);
+                POST.postResponse(exchange,"USER NOT FOUND",401);
             }
             String rezervationsJSONString = reservations.toString();
             POST.postResponse(exchange,rezervationsJSONString,200);
