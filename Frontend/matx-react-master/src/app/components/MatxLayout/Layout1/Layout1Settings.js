@@ -10,6 +10,9 @@ const Layout1Settings = {
     fixed: true,
     theme: 'whiteBlue', // View all valid theme colors inside MatxTheme/themeColors.js
   },
+  CheckInDialog: {
+    open: false,
+  },
 };
 
 export default Layout1Settings;

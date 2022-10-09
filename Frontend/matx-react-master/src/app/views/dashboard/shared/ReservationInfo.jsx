@@ -19,7 +19,7 @@ import { useSelector } from 'react-redux';
 import { isBefore } from 'date-fns';
 import { useTheme } from '@emotion/react';
 import { makeStyles } from '@mui/styles';
-import CheckInButton from './CheckInButton';
+import CheckInButton from './CheckIn/CheckInButton';
 
 const CardRoot = styled(Card)(({ theme }) => ({
   marginBottom: '15px',
