@@ -155,7 +155,7 @@ Nu uitați să acordați o stea proiectului! Multumesc din nou!
 
 Dincă Andrei-Gabriel - @2023 - andrei@dinca.one
 
-Project Link: [https://github.com/Andreid27/RetetaTa.ro](RetetaTa.ro)
+Project Link: [https://github.com/Andreid27/FlightsApp](FlightsApp)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
