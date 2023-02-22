@@ -23,7 +23,7 @@
 
 <!-- PROJECT LOGO -->
 
-  <h3 align="center">FlightsApp</h3>
+  <h1 align="center">FlightsApp</h1>
 
 <!-- TABLE OF CONTENTS -->
 <details>
@@ -190,7 +190,7 @@ Use this space to list resources you find helpful and would like to give credit 
 [license-url]: https://github.com/othneildrew/Best-README-Template/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://www.linkedin.com/in/dinca-andrei/
-[product-screenshot]: ./FrontendNew/Screenshot.jpg
+[product-screenshot]: ./SQL/Screenshot_FlightsApp.jpg
 [next.js]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
 [next-url]: https://nextjs.org/
 [react.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
