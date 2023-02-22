@@ -201,5 +201,5 @@ Use this space to list resources you find helpful and would like to give credit 
 [fuse-url]: https://fusetheme.com/
 [bootstrap.com]: https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white
 [bootstrap-url]: https://getbootstrap.com
-[mysql]: https://png2.cleanpng.com/sh/4ca3f1eaf21540d2e70230d58614d1fe/L0KzQYm3WMA0N5xxgpH0aYP2gLBuTf16e6JxRdV1dYP3dcO0hPF1aZNmi9c2bXHxcbjsjfVvfF54keV9ZX2w9QoaTnmjoF7qqwg25aYkPjYBrr3lw9QyBDKKLUXlRoW3hMhjPWVoTacDLkezRIe4UMgyOWY4S6QDM0e1Q4S7V8IveJ9s/kisspng-mysql-cluster-database-management-system-%E4%B8%93-%E9%A2%98-%E5%92%96-%E5%95%A1-%E4%B8%8E-%E4%BB%A3-%E7%A0%81-5b640d8b54c558.7046108115332837233472.png
+[mysql]: https://1000logos.net/wp-content/uploads/2020/08/MySQL-Logo.png
 [mysql-url]: https://www.mysql.com/
